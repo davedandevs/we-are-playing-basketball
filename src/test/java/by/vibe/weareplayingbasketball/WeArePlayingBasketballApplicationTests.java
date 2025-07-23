@@ -1,10 +1,10 @@
-package by.vibe.weplayingbasketball;
+package by.vibe.weareplayingbasketball;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class WePlayingBasketballApplicationTests {
+class WeArePlayingBasketballApplicationTests {
 
   @Test
   void contextLoads() {

@@ -1,13 +1,13 @@
-package by.vibe.weplayingbasketball;
+package by.vibe.weareplayingbasketball;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WePlayingBasketballApplication {
+public class WeArePlayingBasketballApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(WePlayingBasketballApplication.class, args);
+    SpringApplication.run(WeArePlayingBasketballApplication.class, args);
   }
 
 }

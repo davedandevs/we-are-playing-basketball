@@ -1,4 +1,4 @@
-package by.vibe.weplayingbasketball.model;
+package by.vibe.weareplayingbasketball.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
