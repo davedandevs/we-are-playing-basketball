@@ -17,7 +17,9 @@ java {
 
 checkstyle {
     toolVersion = "10.21.4"
+    configFile = file("config/checkstyle/checkstyle.xml")
 }
+
 
 repositories {
     mavenCentral()
@@ -79,7 +81,8 @@ tasks {
          )
      )
  }
- 
+
+
  sourceSets {
      main {
          java.srcDir("$buildDir/generated/src/main/java")
