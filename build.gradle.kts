@@ -17,7 +17,7 @@ java {
 
 checkstyle {
     toolVersion = "10.21.4"
-    configFile = file("config/checkstyle/checkstyle.xml")
+    isShowViolations = false
 }
 
 
@@ -51,6 +51,8 @@ dependencies {
 
     // Test
     testImplementation(group = "org.springframework.boot", name = "spring-boot-starter-test")
+
+    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
 }
 
 tasks {
