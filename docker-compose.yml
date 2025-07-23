@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:15
+    container_name: basketball-db
+    restart: always
+    environment:
+      POSTGRES_USER: vibe
+      POSTGRES_PASSWORD: vibe
+      POSTGRES_DB: basketball
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    container_name: basketball-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/basketball
+      SPRING_DATASOURCE_USERNAME: vibe
+      SPRING_DATASOURCE_PASSWORD: vibe
+    command: ["java", "-jar", "app.jar"]
+
+volumes:
+  pgdata:

@@ -53,6 +53,7 @@ dependencies {
     testImplementation(group = "org.springframework.boot", name = "spring-boot-starter-test")
 
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+    implementation("org.postgresql:postgresql:42.7.6")
 }
 
 tasks {
@@ -62,6 +63,10 @@ tasks {
     compileJava {
         dependsOn(openApiGenerate)
     }
+}
+
+tasks.named<Jar>("jar") {
+    archiveFileName.set("app.jar")
 }
 
  val oasResourcesDir = "$projectDir/src/main/resources/static/oas"
