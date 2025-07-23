@@ -1,0 +1,34 @@
+openapi: 3.0.3
+info:
+  title: Start API
+  version: 1.0.0
+
+paths:
+  /start:
+    get:
+      summary: Start endpoint
+      description: Returns success on start or error on failure.
+      responses:
+        '200':
+          description: Successful start
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: error
