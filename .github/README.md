@@ -8,13 +8,12 @@
 
 ## Approximate expected API
 
-### Authentication 
+### Authentication
 
 | HTTP Method | URL          | Description                   | Required Role |
 |-------------|--------------|-------------------------------|---------------|
 | POST        | /auth/login  | User login, issues a token    | Any           |
 | POST        | /auth/logout | Logout, invalidates the token | Any           |
-
 
 ### Users
 
@@ -26,7 +25,6 @@
 | PUT         | /users/{id} | Update a user       | ADMIN         |
 | DELETE      | /users/{id} | Delete a user       | ADMIN         |
 
-
 ### Players
 
 | HTTP Method | URL           | Description         | Required Role |
@@ -36,7 +34,6 @@
 | POST        | /players      | Add a player        | ADMIN         |
 | PUT         | /players/{id} | Update player data  | ADMIN         |
 | DELETE      | /players/{id} | Delete a player     | ADMIN         |
-
 
 ### Teams
 
@@ -48,7 +45,6 @@
 | PUT         | /teams/{id} | Update a team | ADMIN         |
 | DELETE      | /teams/{id} | Delete a team | ADMIN         |
 
-
 ### Seasons
 
 | HTTP Method | URL           | Description     | Required Role |
@@ -58,7 +54,6 @@
 | POST        | /seasons      | Add a season    | ADMIN         |
 | PUT         | /seasons/{id} | Update a season | ADMIN         |
 | DELETE      | /seasons/{id} | Delete a season | ADMIN         |
-
 
 ### Matches
 
@@ -70,7 +65,6 @@
 | PUT         | /matches/{id} | Update a match              | ADMIN         |
 | DELETE      | /matches/{id} | Delete a match              | ADMIN         |
 
-
 ### Stats
 
 | HTTP Method | URL                           | Description              | Required Role |
@@ -79,7 +73,6 @@
 | GET         | /statistics/{id}              | Get stats by ID          | Any           |
 | POST        | /matches/{matchId}/statistics | Add/update player stats  | ADMIN         |
 | DELETE      | /statistics/{id}              | Delete a stats record    | ADMIN         |
-
 
 ### Stats by team / player / match
 
@@ -106,5 +99,5 @@ This project is licensed under the MIT License. See the [LICENSE](../LICENSE) fi
 
 ## Contact
 
-If you have any questions or feedback, please feel free to contact us or create an issue 
+If you have any questions or feedback, please feel free to contact us or create an issue
 in [Issues](https://github.com/PHYSI6/we-are-playing-basketball/issues/new/choose).

@@ -1,9 +1,9 @@
 name: Tech Task
 description: Request a new feature or enhancement
 title: "[TECH TASK]: "
-labels: ["enhancement"]
+labels: [ "enhancement" ]
 assignees:
-  -  PHYSI6
+  - PHYSI6
 body:
   - type: markdown
     attributes:
