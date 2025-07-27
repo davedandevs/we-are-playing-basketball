@@ -1,7 +1,7 @@
-package by.vibe.weareplayingbasketball.controller;
+package online.rabko.basketball.controller;
 
 
-import by.vibe.weareplayingbasketball.model.SuccessResponse;
+import online.rabko.basketball.model.SuccessResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
