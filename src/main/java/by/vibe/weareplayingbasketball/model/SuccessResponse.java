@@ -5,10 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Success response.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class SuccessResponse {
-  private boolean success;
+
+    private boolean success;
 }
