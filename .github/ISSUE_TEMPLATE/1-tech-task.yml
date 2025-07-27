@@ -1,0 +1,47 @@
+name: Feature Request
+description: Request a new feature or enhancement
+title: "[TECH TASK]: "
+labels: ["enhancement"]
+assignees:
+  -  PHYSI6
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to submit a tech task!
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: Please describe the task or enhancement you'd like to see implemented.
+      placeholder: Describe the task here...
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Low
+        - Medium
+        - High
+      default: 1
+    validations:
+      required: true
+  - type: textarea
+    id: spec
+    attributes:
+      label: Specification
+      description: Please describe how you imagine the steps required to make it work.
+      placeholder: 1. Drink some coffee ...
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/PHYSI6/we-are-playing-basketball/blob/main/.github/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
