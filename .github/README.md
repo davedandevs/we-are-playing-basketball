@@ -100,4 +100,4 @@ This project is licensed under the MIT License. See the [LICENSE](../LICENSE) fi
 ## Contact
 
 If you have any questions or feedback, please feel free to contact us or create an issue
-in [Issues](https://github.com/PHYSI6/we-are-playing-basketball/issues/new/choose).
+in [Issues](https://github.com/davedandevs/basketball/issues/new/choose).

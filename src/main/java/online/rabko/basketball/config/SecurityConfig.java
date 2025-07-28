@@ -1,4 +1,4 @@
-package by.vibe.weareplayingbasketball.config;
+package online.rabko.basketball.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

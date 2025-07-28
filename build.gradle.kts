@@ -6,7 +6,7 @@ plugins {
     id("org.openapi.generator") version "7.12.0"
 }
 
-group = "by.vibe"
+group = "online.rabko"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -75,8 +75,8 @@ tasks.named<Jar>("jar") {
      generatorName.set("spring")
      inputSpec.set("$oasResourcesDir/basketball.yaml")
      outputDir.set("$buildDir/generated")
-     apiPackage.set("by.vibe.api")
-     modelPackage.set("by.vibe.model")
+     apiPackage.set("online.rabko.api")
+     modelPackage.set("online.rabko.model")
      library.set("spring-boot")
      configOptions.set(
          mapOf(
