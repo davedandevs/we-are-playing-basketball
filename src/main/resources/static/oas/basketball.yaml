@@ -11,7 +11,7 @@ paths:
   # Users endpoints
   /users:
     get:
-      tags: [Users]
+      tags: [ Users ]
       summary: Get list of users
       responses:
         '200':
@@ -30,7 +30,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     post:
-      tags: [Users]
+      tags: [ Users ]
       summary: Create a new user
       requestBody:
         required: true
@@ -66,7 +66,7 @@ paths:
 
   /users/{id}:
     get:
-      tags: [Users]
+      tags: [ Users ]
       summary: Get user by ID
       parameters:
         - name: id
@@ -95,7 +95,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     put:
-      tags: [Users]
+      tags: [ Users ]
       summary: Update user by ID
       parameters:
         - name: id
@@ -136,7 +136,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     delete:
-      tags: [Users]
+      tags: [ Users ]
       summary: Delete user by ID
       parameters:
         - name: id
@@ -163,7 +163,7 @@ paths:
   # Players endpoints
   /players:
     get:
-      tags: [Players]
+      tags: [ Players ]
       summary: Get list of players
       responses:
         '200':
@@ -182,7 +182,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     post:
-      tags: [Players]
+      tags: [ Players ]
       summary: Add a new player
       requestBody:
         required: true
@@ -212,7 +212,7 @@ paths:
 
   /players/{id}:
     get:
-      tags: [Players]
+      tags: [ Players ]
       summary: Get player by ID
       parameters:
         - name: id
@@ -241,7 +241,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     put:
-      tags: [Players]
+      tags: [ Players ]
       summary: Update player by ID
       parameters:
         - name: id
@@ -282,7 +282,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     delete:
-      tags: [Players]
+      tags: [ Players ]
       summary: Delete player by ID
       parameters:
         - name: id
@@ -309,7 +309,7 @@ paths:
   # Teams endpoints
   /teams:
     get:
-      tags: [Teams]
+      tags: [ Teams ]
       summary: Get list of teams
       responses:
         '200':
@@ -328,7 +328,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     post:
-      tags: [Teams]
+      tags: [ Teams ]
       summary: Add a new team
       requestBody:
         required: true
@@ -364,7 +364,7 @@ paths:
 
   /teams/{id}:
     get:
-      tags: [Teams]
+      tags: [ Teams ]
       summary: Get team by ID
       parameters:
         - name: id
@@ -393,7 +393,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     put:
-      tags: [Teams]
+      tags: [ Teams ]
       summary: Update team by ID
       parameters:
         - name: id
@@ -440,7 +440,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     delete:
-      tags: [Teams]
+      tags: [ Teams ]
       summary: Delete team by ID
       parameters:
         - name: id
@@ -473,7 +473,7 @@ paths:
   # Seasons endpoints
   /seasons:
     get:
-      tags: [Seasons]
+      tags: [ Seasons ]
       summary: Get list of seasons
       responses:
         '200':
@@ -492,7 +492,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     post:
-      tags: [Seasons]
+      tags: [ Seasons ]
       summary: Add a new season
       requestBody:
         required: true
@@ -528,7 +528,7 @@ paths:
 
   /seasons/{id}:
     get:
-      tags: [Seasons]
+      tags: [ Seasons ]
       summary: Get season by ID
       parameters:
         - name: id
@@ -557,7 +557,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     put:
-      tags: [Seasons]
+      tags: [ Seasons ]
       summary: Update season by ID
       parameters:
         - name: id
@@ -604,7 +604,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     delete:
-      tags: [Seasons]
+      tags: [ Seasons ]
       summary: Delete season by ID
       parameters:
         - name: id
@@ -637,7 +637,7 @@ paths:
   # Matches endpoints
   /matches:
     get:
-      tags: [Matches]
+      tags: [ Matches ]
       summary: Get list of all matches
       responses:
         '200':
@@ -656,7 +656,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     post:
-      tags: [Matches]
+      tags: [ Matches ]
       summary: Create a new match
       requestBody:
         required: true
@@ -698,7 +698,7 @@ paths:
 
   /matches/{id}:
     get:
-      tags: [Matches]
+      tags: [ Matches ]
       summary: Get match by ID
       parameters:
         - name: id
@@ -727,7 +727,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     put:
-      tags: [Matches]
+      tags: [ Matches ]
       summary: Update match by ID
       parameters:
         - name: id
@@ -774,7 +774,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     delete:
-      tags: [Matches]
+      tags: [ Matches ]
       summary: Delete match by ID
       parameters:
         - name: id
@@ -801,7 +801,7 @@ paths:
   # Match statistics endpoints
   /matches/{matchId}/statistics:
     get:
-      tags: [Statistics]
+      tags: [ Statistics ]
       summary: Get player statistics for a match
       parameters:
         - name: matchId
@@ -832,7 +832,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     post:
-      tags: [Statistics]
+      tags: [ Statistics ]
       summary: Add/update player statistics for a match
       parameters:
         - name: matchId
@@ -874,7 +874,7 @@ paths:
 
   /statistics/{id}:
     get:
-      tags: [Statistics]
+      tags: [ Statistics ]
       summary: Get statistics record by ID
       parameters:
         - name: id
@@ -903,7 +903,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     delete:
-      tags: [Statistics]
+      tags: [ Statistics ]
       summary: Delete statistics record by ID
       parameters:
         - name: id
@@ -930,7 +930,7 @@ paths:
   # Stats endpoints
   /stats/players/top-scorers:
     get:
-      tags: [Stats]
+      tags: [ Stats ]
       summary: Get top scorers
       parameters:
         - name: season_id
@@ -957,7 +957,7 @@ paths:
 
   /stats/players/top-assisters:
     get:
-      tags: [Stats]
+      tags: [ Stats ]
       summary: Get top assisters
       parameters:
         - name: season_id
@@ -984,7 +984,7 @@ paths:
 
   /stats/players/top-rebounders:
     get:
-      tags: [Stats]
+      tags: [ Stats ]
       summary: Get top rebounders
       parameters:
         - name: season_id
@@ -1011,7 +1011,7 @@ paths:
 
   /stats/players/top-stealers:
     get:
-      tags: [Stats]
+      tags: [ Stats ]
       summary: Get top stealers
       parameters:
         - name: season_id
@@ -1038,7 +1038,7 @@ paths:
 
   /stats/players/top-blockers:
     get:
-      tags: [Stats]
+      tags: [ Stats ]
       summary: Get top blockers
       parameters:
         - name: season_id
@@ -1065,7 +1065,7 @@ paths:
 
   /stats/players/efficiency-rating:
     get:
-      tags: [Stats]
+      tags: [ Stats ]
       summary: Get player efficiency rating
       parameters:
         - name: season_id
@@ -1092,7 +1092,7 @@ paths:
 
   /stats/players/minutes-played:
     get:
-      tags: [Stats]
+      tags: [ Stats ]
       summary: Get players by minutes played
       parameters:
         - name: season_id
@@ -1119,7 +1119,7 @@ paths:
 
   /stats/teams/average-points:
     get:
-      tags: [Stats]
+      tags: [ Stats ]
       summary: Get teams by average points per match
       parameters:
         - name: season_id
@@ -1146,7 +1146,7 @@ paths:
 
   /stats/teams/win-rate:
     get:
-      tags: [Stats]
+      tags: [ Stats ]
       summary: Get teams by win rate
       parameters:
         - name: season_id
@@ -1173,7 +1173,7 @@ paths:
 
   /stats/matches/highest-scoring:
     get:
-      tags: [Stats]
+      tags: [ Stats ]
       summary: Get highest scoring matches
       parameters:
         - name: season_id
@@ -1215,8 +1215,8 @@ components:
           type: string
         role:
           type: string
-          enum: [admin, user]
-      required: [id, login, password, role]
+          enum: [ admin, user ]
+      required: [ id, login, password, role ]
 
     Player:
       type: object
@@ -1239,7 +1239,7 @@ components:
           type: integer
         weight_kg:
           type: integer
-      required: [id, first_name, last_name]
+      required: [ id, first_name, last_name ]
 
     Team:
       type: object
@@ -1248,7 +1248,7 @@ components:
           type: integer
         name:
           type: string
-      required: [id, name]
+      required: [ id, name ]
 
     Season:
       type: object
@@ -1263,7 +1263,7 @@ components:
         end_date:
           type: string
           format: date
-      required: [id, name, start_date, end_date]
+      required: [ id, name, start_date, end_date ]
 
     Match:
       type: object
@@ -1283,7 +1283,7 @@ components:
           type: integer
         away_team_score:
           type: integer
-      required: [id, season_id, date, home_team_id, away_team_id]
+      required: [ id, season_id, date, home_team_id, away_team_id ]
 
     PlayerStats:
       type: object
@@ -1327,7 +1327,7 @@ components:
               type: integer
             fouls:
               type: integer
-      required: [id, match_id, player_id, team_id, stats]
+      required: [ id, match_id, player_id, team_id, stats ]
 
     TeamStats:
       type: object
@@ -1344,7 +1344,7 @@ components:
           type: integer
         total_losses:
           type: integer
-      required: [team_id, team_name]
+      required: [ team_id, team_name ]
 
     Error:
       type: object
@@ -1352,10 +1352,7 @@ components:
         error:
           type: string
           description: Error message
-        code:
-          type: integer
-          description: HTTP status code
         details:
           type: object
           description: Additional error details
-      required: [error, code]
+      required: [ error, code ]
