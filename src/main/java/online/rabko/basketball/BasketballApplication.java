@@ -9,13 +9,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BasketballApplication {
 
-  /**
-   * Starts the Spring Boot application.
-   *
-   * @param args command-line arguments
-   */
-  public static void main(String[] args) {
-    SpringApplication.run(BasketballApplication.class, args);
-  }
+    /**
+     * Starts the Spring Boot application.
+     *
+     * @param args command-line arguments
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(BasketballApplication.class, args);
+    }
 }
 
