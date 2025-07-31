@@ -73,6 +73,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the user to retrieve
       responses:
         '200':
           description: User retrieved successfully
@@ -96,12 +97,14 @@ paths:
     put:
       tags: [ Users ]
       summary: Update Basketball app user by ID
+      description: The ID in the request body is ignored, only the path parameter ID is used
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: integer
+            description: ID of the user to update
       requestBody:
         required: true
         content:
@@ -143,6 +146,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the user to delete
       responses:
         '204':
           description: User deleted successfully
@@ -218,6 +222,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the player to retrieve
       responses:
         '200':
           description: Player retrieved successfully
@@ -241,12 +246,14 @@ paths:
     put:
       tags: [ Players ]
       summary: Update player by ID
+      description: The ID in the request body is ignored, only the path parameter ID is used
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: integer
+            description: ID of the player to update
       requestBody:
         required: true
         content:
@@ -288,6 +295,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the player to delete
       responses:
         '204':
           description: Player deleted successfully
@@ -369,6 +377,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the team to retrieve
       responses:
         '200':
           description: Team retrieved successfully
@@ -392,12 +401,14 @@ paths:
     put:
       tags: [ Teams ]
       summary: Update team by ID
+      description: The ID in the request body is ignored, only the path parameter ID is used
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: integer
+            description: ID of the team to update
       requestBody:
         required: true
         content:
@@ -445,6 +456,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the team to delete
       responses:
         '204':
           description: Team deleted successfully
@@ -532,6 +544,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the season to retrieve
       responses:
         '200':
           description: Season retrieved successfully
@@ -555,12 +568,14 @@ paths:
     put:
       tags: [ Seasons ]
       summary: Update season by ID
+      description: The ID in the request body is ignored, only the path parameter ID is used
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: integer
+            description: ID of the season to update
       requestBody:
         required: true
         content:
@@ -608,6 +623,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the season to delete
       responses:
         '204':
           description: Season deleted successfully
@@ -701,6 +717,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the match to retrieve
       responses:
         '200':
           description: Match retrieved successfully
@@ -724,12 +741,14 @@ paths:
     put:
       tags: [ Matches ]
       summary: Update match by ID
+      description: The ID in the request body is ignored, only the path parameter ID is used
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: integer
+            description: ID of the match to update
       requestBody:
         required: true
         content:
@@ -777,6 +796,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the match to delete
       responses:
         '204':
           description: Match deleted successfully
@@ -793,9 +813,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /matches/{matchId}/statistics:
+  /matches/{matchId}/stats:
     get:
-      tags: [ Statistics ]
+      tags: [ Matches ]
       summary: Get player statistics for a match
       parameters:
         - name: matchId
@@ -803,6 +823,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the match to get statistics for
       responses:
         '200':
           description: Match statistics retrieved successfully
@@ -826,7 +847,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     post:
-      tags: [ Statistics ]
+      tags: [ Matches ]
       summary: Add/update player statistics for a match
       parameters:
         - name: matchId
@@ -834,6 +855,7 @@ paths:
           required: true
           schema:
             type: integer
+            description: ID of the match to add statistics for
       requestBody:
         required: true
         content:
@@ -866,25 +888,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /statistics/{id}:
+  /stats/players/{id}:
     get:
-      tags: [ Statistics ]
-      summary: Get statistics record by ID
+      tags: [ Stats ]
+      summary: Get player statistics record by ID
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: integer
+            description: ID of the player statistics record to retrieve
       responses:
         '200':
-          description: Statistics record retrieved successfully
+          description: Player statistics record retrieved successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PlayerStats'
         '404':
-          description: Statistics record not found
+          description: Player statistics record not found
           content:
             application/json:
               schema:
@@ -897,19 +920,20 @@ paths:
                 $ref: '#/components/schemas/Error'
 
     delete:
-      tags: [ Statistics ]
-      summary: Delete statistics record by ID
+      tags: [ Stats ]
+      summary: Delete player statistics record by ID
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: integer
+            description: ID of the player statistics record to delete
       responses:
         '204':
-          description: Statistics record deleted successfully
+          description: Player statistics record deleted successfully
         '404':
-          description: Statistics record not found
+          description: Player statistics record not found
           content:
             application/json:
               schema:
@@ -920,7 +944,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
   /stats/players/top-scorers:
     get:
       tags: [ Stats ]
@@ -931,7 +954,7 @@ paths:
           required: false
           schema:
             type: integer
-          description: Filter by season ID
+            description: Filter by season ID
       responses:
         '200':
           description: Top scorers retrieved successfully
@@ -958,7 +981,7 @@ paths:
           required: false
           schema:
             type: integer
-          description: Filter by season ID
+            description: Filter by season ID
       responses:
         '200':
           description: Top assisters retrieved successfully
@@ -985,7 +1008,7 @@ paths:
           required: false
           schema:
             type: integer
-          description: Filter by season ID
+            description: Filter by season ID
       responses:
         '200':
           description: Top rebounders retrieved successfully
@@ -1012,7 +1035,7 @@ paths:
           required: false
           schema:
             type: integer
-          description: Filter by season ID
+            description: Filter by season ID
       responses:
         '200':
           description: Top stealers retrieved successfully
@@ -1039,7 +1062,7 @@ paths:
           required: false
           schema:
             type: integer
-          description: Filter by season ID
+            description: Filter by season ID
       responses:
         '200':
           description: Top blockers retrieved successfully
@@ -1066,7 +1089,7 @@ paths:
           required: false
           schema:
             type: integer
-          description: Filter by season ID
+            description: Filter by season ID
       responses:
         '200':
           description: Efficiency ratings retrieved successfully
@@ -1093,7 +1116,7 @@ paths:
           required: false
           schema:
             type: integer
-          description: Filter by season ID
+            description: Filter by season ID
       responses:
         '200':
           description: Minutes played stats retrieved successfully
@@ -1120,7 +1143,7 @@ paths:
           required: false
           schema:
             type: integer
-          description: Filter by season ID
+            description: Filter by season ID
       responses:
         '200':
           description: Average points stats retrieved successfully
@@ -1147,7 +1170,7 @@ paths:
           required: false
           schema:
             type: integer
-          description: Filter by season ID
+            description: Filter by season ID
       responses:
         '200':
           description: Win rate stats retrieved successfully
@@ -1174,7 +1197,7 @@ paths:
           required: false
           schema:
             type: integer
-          description: Filter by season ID
+            description: Filter by season ID
       responses:
         '200':
           description: Highest scoring matches retrieved successfully
@@ -1198,17 +1221,29 @@ components:
       properties:
         id:
           type: integer
+          description: Unique identifier for the user
+          example: 1
         login:
           type: string
+          description: User login name
+          example: "davedandevs"
         password:
           type: string
+          description: User password (hashed)
+          example: "$2a$10$N9qo8uLOickgx2ZMRZoMy..."
         first_name:
           type: string
+          description: User's first name
+          example: "Dave"
         last_name:
           type: string
+          description: User's last name
+          example: "Dan"
         role:
           type: string
           enum: [ admin, user ]
+          description: User role (admin or user)
+          example: "admin"
       required: [ id, login, password, role ]
 
     Player:
@@ -1216,20 +1251,36 @@ components:
       properties:
         id:
           type: integer
+          description: Unique identifier for the player
+          example: 1
         team_id:
           type: integer
+          description: ID of the team the player belongs to
+          example: 5
         first_name:
           type: string
+          description: Player's first name
+          example: "Lebron"
         last_name:
           type: string
+          description: Player's last name
+          example: "James"
         position:
           type: string
+          description: Player's position on the court
+          example: "Power Forward"
         age:
           type: integer
+          description: Player's age
+          example: 40
         height:
           type: integer
+          description: Player's height in centimeters
+          example: 206
         weight:
           type: integer
+          description: Player's weight in kilograms
+          example: 110
       required: [ id, first_name, last_name ]
 
     Team:
@@ -1237,8 +1288,12 @@ components:
       properties:
         id:
           type: integer
+          description: Unique identifier for the team
+          example: 1
         name:
           type: string
+          description: Team name
+          example: "Los Angeles Lakers"
       required: [ id, name ]
 
     Season:
@@ -1246,14 +1301,22 @@ components:
       properties:
         id:
           type: integer
+          description: Unique identifier for the season
+          example: 1
         name:
           type: string
+          description: Season name
+          example: "2023-2024 Regular Season"
         start_date:
           type: string
           format: date
+          description: Season start date (YYYY-MM-DD)
+          example: "2023-10-01"
         end_date:
           type: string
           format: date
+          description: Season end date (YYYY-MM-DD)
+          example: "2024-04-30"
       required: [ id, name, start_date, end_date ]
 
     Match:
@@ -1261,19 +1324,33 @@ components:
       properties:
         id:
           type: integer
+          description: Unique identifier for the match
+          example: 1
         season_id:
           type: integer
+          description: ID of the season the match belongs to
+          example: 1
         date:
           type: string
           format: date
+          description: Match date (YYYY-MM-DD)
+          example: "2023-11-15"
         home_team_id:
           type: integer
+          description: ID of the home team
+          example: 1
         away_team_id:
           type: integer
+          description: ID of the away team
+          example: 2
         home_team_score:
           type: integer
+          description: Home team final score
+          example: 98
         away_team_score:
           type: integer
+          description: Away team final score
+          example: 102
       required: [ id, season_id, date, home_team_id, away_team_id ]
 
     PlayerStats:
@@ -1281,43 +1358,80 @@ components:
       properties:
         id:
           type: integer
+          description: Unique identifier for the statistics record
+          example: 1
         match_id:
           type: integer
+          description: ID of the match these stats belong to
+          example: 1
         player_id:
           type: integer
+          description: ID of the player these stats belong to
+          example: 1
         team_id:
           type: integer
+          description: ID of the team the player was on during this match
+          example: 1
         stats:
           type: object
+          description: Player statistics for the match
           properties:
             points:
               type: integer
+              description: Points scored
+              example: 25
             assists:
               type: integer
+              description: Assists made
+              example: 7
             rebounds:
               type: integer
+              description: Rebounds grabbed
+              example: 10
             steals:
               type: integer
+              description: Steals made
+              example: 2
             blocks:
               type: integer
+              description: Blocks made
+              example: 1
             minutes_played:
               type: integer
+              description: Minutes played
+              example: 36
             field_goals_made:
               type: integer
+              description: Field goals made
+              example: 10
             field_goals_attempted:
               type: integer
+              description: Field goals attempted
+              example: 18
             three_points_made:
               type: integer
+              description: Three-pointers made
+              example: 3
             three_points_attempted:
               type: integer
+              description: Three-pointers attempted
+              example: 5
             free_throws_made:
               type: integer
+              description: Free throws made
+              example: 2
             free_throws_attempted:
               type: integer
+              description: Free throws attempted
+              example: 2
             turnovers:
               type: integer
+              description: Turnovers committed
+              example: 3
             fouls:
               type: integer
+              description: Fouls committed
+              example: 2
       required: [ id, match_id, player_id, team_id, stats ]
 
     TeamStats:
@@ -1325,16 +1439,28 @@ components:
       properties:
         team_id:
           type: integer
+          description: Unique identifier for the team
+          example: 1
         team_name:
           type: string
+          description: Team name
+          example: "Los Angeles Lakers"
         average_points:
           type: number
+          description: Average points per match
+          example: 102.5
         win_rate:
           type: number
+          description: Win rate percentage (0-1)
+          example: 0.75
         total_wins:
           type: integer
+          description: Total wins
+          example: 12
         total_losses:
           type: integer
+          description: Total losses
+          example: 4
       required: [ team_id, team_name ]
 
     Error:
