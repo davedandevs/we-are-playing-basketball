@@ -8,11 +8,10 @@ servers:
     description: Server url
 
 paths:
-  # Users endpoints
   /users:
     get:
       tags: [ Users ]
-      summary: Get list of users
+      summary: Get current list of Basketball app users
       responses:
         '200':
           description: List of users retrieved successfully
@@ -31,7 +30,7 @@ paths:
 
     post:
       tags: [ Users ]
-      summary: Create a new user
+      summary: Create a new Basketball app user
       requestBody:
         required: true
         content:
@@ -67,7 +66,7 @@ paths:
   /users/{id}:
     get:
       tags: [ Users ]
-      summary: Get user by ID
+      summary: Get Basketball app user by ID
       parameters:
         - name: id
           in: path
@@ -96,7 +95,7 @@ paths:
 
     put:
       tags: [ Users ]
-      summary: Update user by ID
+      summary: Update Basketball app user by ID
       parameters:
         - name: id
           in: path
@@ -137,7 +136,7 @@ paths:
 
     delete:
       tags: [ Users ]
-      summary: Delete user by ID
+      summary: Delete Basketball app user by ID
       parameters:
         - name: id
           in: path
@@ -160,7 +159,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  # Players endpoints
   /players:
     get:
       tags: [ Players ]
@@ -306,7 +304,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  # Teams endpoints
   /teams:
     get:
       tags: [ Teams ]
@@ -470,7 +467,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  # Seasons endpoints
   /seasons:
     get:
       tags: [ Seasons ]
@@ -634,7 +630,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  # Matches endpoints
   /matches:
     get:
       tags: [ Matches ]
@@ -798,7 +793,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  # Match statistics endpoints
   /matches/{matchId}/statistics:
     get:
       tags: [ Statistics ]
@@ -927,7 +921,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  # Stats endpoints
   /stats/players/top-scorers:
     get:
       tags: [ Stats ]
@@ -1223,8 +1216,6 @@ components:
       properties:
         id:
           type: integer
-        user_id:
-          type: integer
         team_id:
           type: integer
         first_name:
@@ -1235,9 +1226,9 @@ components:
           type: string
         age:
           type: integer
-        height_cm:
+        height:
           type: integer
-        weight_kg:
+        weight:
           type: integer
       required: [ id, first_name, last_name ]
 
@@ -1355,4 +1346,4 @@ components:
         details:
           type: object
           description: Additional error details
-      required: [ error, code ]
+      required: [ error ]

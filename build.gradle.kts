@@ -15,10 +15,6 @@ java {
     }
 }
 
-springBoot {
-    mainClass.set("online.rabko.basketball.BasketballApplication")
-}
-
 checkstyle {
     toolVersion = "10.21.4"
     isShowViolations = false
@@ -69,22 +65,21 @@ tasks {
     }
 }
 
-tasks.named<Jar>("jar") {
-    archiveFileName.set("app.jar")
-}
-
- val oasResourcesDir = "$projectDir/src/main/resources/static/oas"
- val buildDir = layout.buildDirectory.get()
+val oasResourcesDir = "$projectDir/src/main/resources/static/oas"
+val buildDir = layout.buildDirectory.get()
 openApiGenerate {
     generatorName.set("spring")
     inputSpec.set("$oasResourcesDir/basketball.yaml")
     outputDir.set("$buildDir/generated")
     modelPackage.set("online.rabko.model")
+    apiPackage.set("online.rabko.api")
     library.set("spring-boot")
     configOptions.set(
         mapOf(
             "useSpringBoot3" to "true",
             "useSwaggerUI" to "true",
+            "interfaceOnly" to "true",
+            "skipDefaultInterface" to "true",
             "openApiNullable" to "false"
         )
     )

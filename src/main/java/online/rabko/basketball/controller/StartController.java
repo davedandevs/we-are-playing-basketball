@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StartController {
 
-    /**
-     * Start.
-     *
-     * @return the success response entity
-     */
-    @GetMapping("/start")
-    public ResponseEntity<?> start() {
-        return ResponseEntity.ok(SuccessResponse.builder().success(true).build());
-    }
+  /**
+   * Start.
+   *
+   * @return the success response entity
+   */
+  @GetMapping("/start")
+  public ResponseEntity<?> start() {
+    return ResponseEntity.ok(SuccessResponse.builder().success(true).build());
+  }
 }
