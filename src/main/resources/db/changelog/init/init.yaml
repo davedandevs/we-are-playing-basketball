@@ -1,14 +1,14 @@
 databaseChangeLog:
   - changeSet:
       id: 6
-      author: PHYIS6
+      author: PHYSI6
       changes:
         - sqlFile:
-            path: db/changelog/init/changes.sql
+            path: changes.sql
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
       rollback:
         - sqlFile:
-            path: db/changelog/init/rollback.sql
+            path: rollback.sql
             relativeToChangelogFile: true

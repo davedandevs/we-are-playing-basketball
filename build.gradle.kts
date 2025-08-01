@@ -37,6 +37,7 @@ dependencies {
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-security")
     implementation(group = "org.springframework.boot", name = "spring-boot-configuration-processor")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-oauth2-resource-server")
+    implementation(group = "org.springframework.boot", name = "spring-boot-starter-jdbc")
     developmentOnly(group = "org.springframework.boot", name = "spring-boot-devtools")
 
     // Swagger
@@ -55,9 +56,8 @@ dependencies {
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
 
     // Database
-    implementation(group = "org.postgresql", name = "postgresql", version = "42.7.6")
-
-   implementation ("org.liquibase:liquibase-core")
+    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.liquibase:liquibase-core")
 }
 
 tasks {
