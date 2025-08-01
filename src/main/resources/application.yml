@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: basketball
+  datasource:
+    url: jdbc:postgresql://db:5432/basketball
+    username: vibe
+    password: vibe
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  liquibase:
+    change-log: classpath:db/changelog/main.yaml
+
+server:
+  port: 8080
+  forward-headers-strategy: native
+
+logging:
+  level:
+    root: info
+    liquibase: debug
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: general
+        url: /oas/basketball.yaml

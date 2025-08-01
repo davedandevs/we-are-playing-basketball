@@ -53,7 +53,11 @@ dependencies {
     testImplementation(group = "org.springframework.boot", name = "spring-boot-starter-test")
 
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
-    implementation("org.postgresql:postgresql:42.7.6")
+
+    // Database
+    implementation(group = "org.postgresql", name = "postgresql", version = "42.7.6")
+
+   implementation ("org.liquibase:liquibase-core")
 }
 
 tasks {
