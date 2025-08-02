@@ -61,10 +61,10 @@ public class JwtService {
         long tokenValidityInSeconds = 3600;
         Date expiration = new Date(now.getTime() + tokenValidityInSeconds * 1000L);
         return Jwts.builder()
-            .setClaims(extraClaims)
-            .setSubject(userDetails.getUsername())
-            .setIssuedAt(now)
-            .setExpiration(expiration)
+            .claims(extraClaims)
+            .subject(userDetails.getUsername())
+            .issuedAt(now)
+            .expiration(expiration)
             .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
     }
@@ -126,8 +126,8 @@ public class JwtService {
             .parser()
             .setSigningKey(getSigningKey())
             .build()
-            .parseClaimsJws(token)
-            .getBody();
+            .parseSignedClaims(token)
+            .getPayload();
     }
 
     /**

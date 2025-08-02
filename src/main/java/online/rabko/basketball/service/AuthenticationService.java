@@ -1,11 +1,12 @@
 package online.rabko.basketball.service;
 
 import lombok.RequiredArgsConstructor;
-import online.rabko.basketball.dto.request.SignInRequest;
-import online.rabko.basketball.dto.request.SignUpRequest;
-import online.rabko.basketball.dto.response.JwtAuthenticationResponse;
 import online.rabko.basketball.entity.User;
 import online.rabko.basketball.enums.Role;
+import online.rabko.basketball.exception.UserAlreadyExistsException;
+import online.rabko.model.JwtAuthenticationResponse;
+import online.rabko.model.SignInRequest;
+import online.rabko.model.SignUpRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +34,9 @@ public class AuthenticationService {
      * @return the JWT authentication response with generated token
      */
     public JwtAuthenticationResponse signUp(SignUpRequest request) {
+        if (userService.existsByUsername(request.getUsername())) {
+            throw new UserAlreadyExistsException(request.getUsername());
+        }
         User user = User.builder()
             .username(request.getUsername())
             .password(passwordEncoder.encode(request.getPassword()))
@@ -44,6 +48,7 @@ public class AuthenticationService {
         String jwt = jwtService.generateToken(user);
         return new JwtAuthenticationResponse(jwt);
     }
+
 
     /**
      * Authenticates an existing user and returns a JWT token if credentials are valid.

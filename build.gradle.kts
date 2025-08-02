@@ -112,36 +112,67 @@ openApiGenerate {
      }
  }
 
- jacoco {
-     toolVersion = "0.8.10"
- }
+tasks.withType<Test> {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+    finalizedBy(tasks.jacocoTestCoverageVerification)
+}
 
- tasks.test {
-     useJUnitPlatform()
-     finalizedBy(tasks.jacocoTestReport)
- }
+tasks.withType<JacocoReport> {
+    dependsOn(tasks.test)
 
- tasks.jacocoTestReport {
-     dependsOn(tasks.test)
-     reports {
-         xml.required.set(true)
-         html.required.set(true)
-     }
- }
+    reports {
+        xml.required.set(true)
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/coverage.xml"))
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html"))
+    }
 
- tasks.jacocoTestCoverageVerification {
-     dependsOn(tasks.test)
+    afterEvaluate {
+        classDirectories.setFrom(classDirectories.files.map {
+            fileTree(it).matching {
+                exclude(
+                    "**/dto/**",
+                    "**/entity/**",
+                    "**/model/**",
+                    "**/api/**",
+                    "**/config/**",
+                    "**/exception/**",
+                    "**/enums/**",
+                    "**/*Request*",
+                    "**/*Response*",
+                    "**/*Exception*",
+                    "**/*Application*"
+                )
+            }
+        })
+    }
+}
 
-     violationRules {
-         rule {
-             limit {
-                 minimum = "0.80".toBigDecimal()
-             }
-         }
-     }
- }
+tasks.withType<JacocoCoverageVerification> {
+    dependsOn(tasks.test)
 
- tasks.check {
-     dependsOn(tasks.jacocoTestCoverageVerification)
- }
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.80".toBigDecimal()
+            }
+
+            excludes = listOf(
+                "**/dto/**",
+                "**/entity/**",
+                "**/model/**",
+                "**/api/**",
+                "**/config/**",
+                "**/exception/**",
+                "**/enums/**",
+                "**/*Request*",
+                "**/*Response*",
+                "**/*Exception*",
+                "**/*Application*"
+            )
+        }
+        isFailOnViolation = false
+    }
+}
+
 

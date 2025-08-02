@@ -1550,7 +1550,4 @@ components:
         error:
           type: string
           description: Error message
-        details:
-          type: object
-          description: Additional error details
       required: [ error ]

@@ -62,4 +62,8 @@ public class UserService {
     public UserDetailsService userDetailsService() {
         return this::getByUsername;
     }
+
+    public boolean existsByUsername(String username) {
+        return repository.existsByUsername(username);
+    }
 }

@@ -10,11 +10,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import online.rabko.basketball.config.JwtAuthenticationFilter;
 import online.rabko.basketball.controller.AuthController;
-import online.rabko.basketball.dto.request.SignInRequest;
-import online.rabko.basketball.dto.request.SignUpRequest;
-import online.rabko.basketball.dto.response.JwtAuthenticationResponse;
 import online.rabko.basketball.service.AuthenticationService;
 import online.rabko.basketball.service.JwtService;
+import online.rabko.model.JwtAuthenticationResponse;
+import online.rabko.model.SignInRequest;
+import online.rabko.model.SignUpRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -46,10 +46,7 @@ class AuthControllerTest {
 
     @Test
     void signUp_shouldReturnToken() throws Exception {
-        SignUpRequest request = SignUpRequest.builder()
-            .username("testuser")
-            .password("pass123")
-            .build();
+        SignUpRequest request = new SignUpRequest("testuser", "pass123");
         JwtAuthenticationResponse response = new JwtAuthenticationResponse("mock-token");
         when(authenticationService.signUp(any())).thenReturn(response);
         mockMvc.perform(post("/auth/sign-up")
@@ -61,10 +58,7 @@ class AuthControllerTest {
 
     @Test
     void signIn_shouldReturnToken() throws Exception {
-        SignInRequest request = SignInRequest.builder()
-            .username("testuser")
-            .password("pass123")
-            .build();
+        SignInRequest request = new SignInRequest("testuser", "pass123");
         JwtAuthenticationResponse response = new JwtAuthenticationResponse("token-123");
         when(authenticationService.signIn(any())).thenReturn(response);
         mockMvc.perform(post("/auth/sign-in")
