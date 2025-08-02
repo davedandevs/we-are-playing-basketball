@@ -1,84 +1,65 @@
 package online.rabko.basketball.service;
 
 import lombok.RequiredArgsConstructor;
-import online.rabko.basketball.domain.model.Role;
-import online.rabko.basketball.domain.model.User;
+import online.rabko.basketball.entity.User;
 import online.rabko.basketball.repository.UserRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for the User entity.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository repository;
 
     /**
-     * Сохранение пользователя
+     * Saves the given user to the database.
      *
-     * @return сохраненный пользователь
+     * @param user the user entity to save
+     * @return the saved user entity
      */
     public User save(User user) {
         return repository.save(user);
     }
 
-
     /**
-     * Создание пользователя
+     * Creates a new user if the username is not already taken. Throws an exception if a user with
+     * the same username exists.
      *
-     * @return созданный пользователь
+     * @param user the user to create
+     * @return the newly created user
+     * @throws RuntimeException if a user with the given username already exists
      */
     public User create(User user) {
-        if (repository.existsByLogin(user.getLogin())) {
-            // Заменить на свои исключения
-            throw new RuntimeException("Пользователь с таким именем уже существует");
+        if (repository.existsByUsername(user.getUsername())) {
+            throw new RuntimeException("User with this username already exists");
         }
-
         return save(user);
     }
 
     /**
-     * Получение пользователя по имени пользователя
+     * Retrieves a user by their username.
      *
-     * @return пользователь
+     * @param username the username to look up
+     * @return the user associated with the given username
+     * @throws UsernameNotFoundException if no user is found
      */
-    public User getByLogin(String login) {
-        return repository.findByLogin(login)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+    public User getByUsername(String username) {
+        return repository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     /**
-     * Получение пользователя по имени пользователя
-     * <p>
-     * Нужен для Spring Security
+     * Returns a {@link UserDetailsService} implementation that loads users by username. Required by
+     * Spring Security.
      *
-     * @return пользователь
+     * @return a UserDetailsService backed by this service
      */
     public UserDetailsService userDetailsService() {
-        return this::getByLogin;
-    }
-
-    /**
-     * Получение текущего пользователя
-     *
-     * @return текущий пользователь
-     */
-    public User getCurrentUser() {
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getByLogin(username);
-    }
-
-
-    /**
-     * Выдача прав администратора текущему пользователю
-     * <p>
-     * Нужен для демонстрации
-     */
-    @Deprecated
-    public void getAdmin() {
-        var user = getCurrentUser();
-        user.setRole(Role.ADMIN);
-        save(user);
+        return this::getByUsername;
     }
 }

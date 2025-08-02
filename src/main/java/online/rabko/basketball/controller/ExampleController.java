@@ -1,7 +1,6 @@
 package online.rabko.basketball.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import online.rabko.basketball.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/example")
 @RequiredArgsConstructor
-@Tag(name = "Примеры", description = "Примеры запросов с разными правами доступа")
 public class ExampleController {
     private final UserService service;
 
@@ -27,11 +25,5 @@ public class ExampleController {
     @PreAuthorize("hasRole('ADMIN')")
     public String exampleAdmin() {
         return "Hello, admin!";
-    }
-
-    @GetMapping("/get-admin")
-    @Operation(summary = "Получить роль ADMIN (для демонстрации)")
-    public void getAdmin() {
-        service.getAdmin();
     }
 }

@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import online.rabko.basketball.service.JwtService;
 import online.rabko.basketball.service.UserService;
@@ -49,11 +50,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @throws IOException      in case of IO errors
      */
     @Override
-    protected void doFilterInternal(
-        @NonNull HttpServletRequest request,
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
         @NonNull HttpServletResponse response,
-        @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+        @NonNull FilterChain filterChain)
+        throws ServletException, IOException {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, BEARER_PREFIX)) {
@@ -64,8 +64,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = authHeader.substring(BEARER_PREFIX.length());
         String username = jwtService.extractUserName(jwt);
 
-        if (StringUtils.isNotEmpty(username) &&
-            SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (StringUtils.isNotEmpty(username) && Objects.isNull(
+            SecurityContextHolder.getContext().getAuthentication())) {
 
             UserDetails userDetails = userService.userDetailsService().loadUserByUsername(username);
 

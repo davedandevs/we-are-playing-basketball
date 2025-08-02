@@ -1,13 +1,29 @@
 package online.rabko.basketball.repository;
 
-import online.rabko.basketball.domain.model.User;
+import java.util.Optional;
+import online.rabko.basketball.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
+/**
+ * Repository interface for managing {@link User} entities.
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByLogin(String login);
-    boolean existsByLogin(String login);
+
+    /**
+     * Finds a user by their username.
+     *
+     * @param username the username to search for
+     * @return an Optional containing the user if found, or empty otherwise
+     */
+    Optional<User> findByUsername(String username);
+
+    /**
+     * Checks if a user with the given username already exists.
+     *
+     * @param username the username to check
+     * @return true if a user exists with that username, false otherwise
+     */
+    boolean existsByUsername(String username);
 }

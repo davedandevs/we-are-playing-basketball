@@ -1,4 +1,4 @@
-package online.rabko.basketball.domain.model;
+package online.rabko.basketball.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,9 +15,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import online.rabko.basketball.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Entity representing an application user stored in the {@code users} table. Implements
+ * {@link UserDetails} for integration with Spring Security.
+ */
 @Entity
 @Builder
 @Getter
@@ -27,48 +32,41 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "users")
 public class User implements UserDetails {
 
+    /**
+     * Unique identifier for the user (primary key).
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "login", unique = true)
-    private String login;
+    /**
+     * Unique username used for authentication.
+     */
+    @Column(name = "username", unique = true)
+    private String username;
 
+    /**
+     * Encrypted user password.
+     */
     @Column(name = "password", nullable = false)
     private String password;
 
+    /**
+     * User role defining their access level in the system.
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
 
+    /**
+     * Returns authorities granted to the user based on their role.
+     *
+     * @return a collection containing the user's role as a granted authority
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(() -> "ROLE_" + role.name());
     }
-
-    @Override
-    public String getUsername() {
-        return login;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }
+

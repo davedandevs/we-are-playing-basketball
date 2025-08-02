@@ -1223,9 +1223,9 @@ components:
           type: integer
           description: Unique identifier for the user
           example: 1
-        login:
+        username:
           type: string
-          description: User login name
+          description: User name
           example: "davedandevs"
         password:
           type: string
@@ -1244,7 +1244,7 @@ components:
           enum: [ admin, user ]
           description: User role (admin or user)
           example: "admin"
-      required: [ id, login, password, role ]
+      required: [ id, username, password, role ]
 
     Player:
       type: object
