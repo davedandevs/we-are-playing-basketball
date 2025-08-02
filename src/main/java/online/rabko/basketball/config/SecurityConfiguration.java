@@ -2,7 +2,6 @@ package online.rabko.basketball.config;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import online.rabko.basketball.enums.Role;
 import online.rabko.basketball.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,9 +51,9 @@ public class SecurityConfiguration {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**")
+                .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**",
+                    "/oas/**")
                 .permitAll()
-                .requestMatchers("/endpoint", "/admin/**").hasRole(Role.ADMIN.name())
                 .anyRequest().authenticated())
             .sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
