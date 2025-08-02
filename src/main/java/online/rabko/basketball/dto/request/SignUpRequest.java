@@ -1,6 +1,7 @@
 package online.rabko.basketball.dto.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,8 +9,7 @@ import lombok.NoArgsConstructor;
  * DTO representing the user registration (sign-up) request data.
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 public class SignUpRequest {
 
     private String username;

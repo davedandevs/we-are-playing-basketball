@@ -1,6 +1,7 @@
 plugins {
     java
     checkstyle
+    jacoco
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
     id("org.openapi.generator") version "7.12.0"
@@ -53,8 +54,13 @@ dependencies {
 
     // Test
     testImplementation(group = "org.springframework.boot", name = "spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.mockito:mockito-core")
+    testImplementation("org.mockito:mockito-junit-jupiter")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.springframework.security:spring-security-test")
 
-    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
 
     // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
@@ -64,6 +70,10 @@ dependencies {
     // Database
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.liquibase:liquibase-core")
+
+    //Other
+    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+
 }
 
 tasks {
@@ -101,3 +111,37 @@ openApiGenerate {
          java.srcDir("$buildDir/generated/src/main/java")
      }
  }
+
+ jacoco {
+     toolVersion = "0.8.10"
+ }
+
+ tasks.test {
+     useJUnitPlatform()
+     finalizedBy(tasks.jacocoTestReport)
+ }
+
+ tasks.jacocoTestReport {
+     dependsOn(tasks.test)
+     reports {
+         xml.required.set(true)
+         html.required.set(true)
+     }
+ }
+
+ tasks.jacocoTestCoverageVerification {
+     dependsOn(tasks.test)
+
+     violationRules {
+         rule {
+             limit {
+                 minimum = "0.80".toBigDecimal()
+             }
+         }
+     }
+ }
+
+ tasks.check {
+     dependsOn(tasks.jacocoTestCoverageVerification)
+ }
+
