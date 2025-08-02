@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users
     password   VARCHAR(255) NOT NULL,
     first_name VARCHAR(255),
     last_name  VARCHAR(255),
-    role       VARCHAR(255)  NOT NULL CHECK (role IN ('admin', 'user'))
+    role       VARCHAR(255)  NOT NULL CHECK (role IN ('ADMIN', 'USER'))
 );
 
 CREATE TABLE IF NOT EXISTS seasons

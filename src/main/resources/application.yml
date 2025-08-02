@@ -11,7 +11,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   liquibase:
-    enabled: true
+    enabled: false
     change-log: classpath:db/changelog/main.yaml
 
 server:
@@ -27,3 +27,7 @@ springdoc:
     urls:
       - name: general
         url: /oas/basketball.yaml
+
+token:
+  signing:
+    key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855

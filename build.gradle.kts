@@ -38,6 +38,7 @@ dependencies {
     implementation(group = "org.springframework.boot", name = "spring-boot-configuration-processor")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-oauth2-resource-server")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-jdbc")
+    implementation(group = "org.springframework.boot", name = "spring-boot-starter-data-jpa")
     developmentOnly(group = "org.springframework.boot", name = "spring-boot-devtools")
 
     // Swagger
@@ -54,6 +55,11 @@ dependencies {
     testImplementation(group = "org.springframework.boot", name = "spring-boot-starter-test")
 
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+
+    // JWT
+    implementation("io.jsonwebtoken:jjwt-api:0.12.6")
+    implementation("io.jsonwebtoken:jjwt-impl:0.12.6")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
     // Database
     runtimeOnly("org.postgresql:postgresql")
