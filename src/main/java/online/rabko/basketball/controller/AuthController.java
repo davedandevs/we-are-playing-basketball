@@ -2,9 +2,9 @@ package online.rabko.basketball.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import online.rabko.basketball.dto.response.JwtAuthenticationResponse;
 import online.rabko.basketball.dto.request.SignInRequest;
 import online.rabko.basketball.dto.request.SignUpRequest;
+import online.rabko.basketball.dto.response.JwtAuthenticationResponse;
 import online.rabko.basketball.service.AuthenticationService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

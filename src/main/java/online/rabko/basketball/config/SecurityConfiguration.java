@@ -40,7 +40,7 @@ public class SecurityConfiguration {
     /**
      * Configures the main security filter chain: - Disables CSRF - Enables CORS with open wildcard
      * configuration - Secures endpoint access based on roles - Sets session policy to stateless
-     * (JWT-based) - Adds custom authentication provider and JWT filter
+     * (JWT-based) - Adds custom authentication provider and JWT filter.
      *
      * @param http the HttpSecurity object
      * @return configured SecurityFilterChain bean

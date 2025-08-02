@@ -50,6 +50,26 @@ public class JwtService {
     }
 
     /**
+     * Generates a JWT token with additional claims.
+     *
+     * @param extraClaims additional data to include in the token
+     * @param userDetails the authenticated user
+     * @return signed JWT token
+     */
+    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        Date now = new Date(System.currentTimeMillis());
+        long tokenValidityInSeconds = 3600;
+        Date expiration = new Date(now.getTime() + tokenValidityInSeconds * 1000L);
+        return Jwts.builder()
+            .setClaims(extraClaims)
+            .setSubject(userDetails.getUsername())
+            .setIssuedAt(now)
+            .setExpiration(expiration)
+            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+            .compact();
+    }
+
+    /**
      * Validates whether the token is valid for the given user.
      *
      * @param token       the JWT token
@@ -72,26 +92,6 @@ public class JwtService {
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
-    }
-
-    /**
-     * Generates a JWT token with additional claims.
-     *
-     * @param extraClaims additional data to include in the token
-     * @param userDetails the authenticated user
-     * @return signed JWT token
-     */
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        Date now = new Date(System.currentTimeMillis());
-        long tokenValidityInSeconds = 3600;
-        Date expiration = new Date(now.getTime() + tokenValidityInSeconds * 1000L);
-        return Jwts.builder()
-            .setClaims(extraClaims)
-            .setSubject(userDetails.getUsername())
-            .setIssuedAt(now)
-            .setExpiration(expiration)
-            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-            .compact();
     }
 
     /**

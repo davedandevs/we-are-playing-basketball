@@ -32,7 +32,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     /**
-     * Prefix expected before the JWT in the Authorization header
+     * Prefix expected before the JWT in the Authorization header.
      */
     public static final String BEARER_PREFIX = "Bearer ";
 

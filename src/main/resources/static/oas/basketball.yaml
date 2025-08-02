@@ -6,8 +6,52 @@ info:
 servers:
   - url: http://localhost:8080
     description: Server url
+security:
+  - bearerAuth: [ ]
 
 paths:
+  /auth/sign-up:
+    post:
+      tags: [ Auth ]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+      responses:
+        '200':
+          description: Registration successful, returns JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtAuthenticationResponse'
+        '400':
+          description: Invalid input data
+        '409':
+          description: User already exists
+
+  /auth/sign-in:
+    post:
+      tags: [ Auth ]
+      summary: Authenticate user and return JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+      responses:
+        '200':
+          description: Authentication successful, returns JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtAuthenticationResponse'
+        '401':
+          description: Invalid username or password
+
   /users:
     get:
       tags: [ Users ]
@@ -1215,7 +1259,44 @@ paths:
                 $ref: '#/components/schemas/Error'
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
+    SignUpRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "davedandevs"
+        password:
+          type: string
+          example: "superSecret123"
+      required: [ username, password ]
+
+    SignInRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "davedandevs"
+        password:
+          type: string
+          example: "superSecret123"
+      required: [ username, password ]
+
+    JwtAuthenticationResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT access token
+          example: "eyJhbGciOiJIUzI1NiIsInR..."
+      required: [ token ]
+
     User:
       type: object
       properties:
