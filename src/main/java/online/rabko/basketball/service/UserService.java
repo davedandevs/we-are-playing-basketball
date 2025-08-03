@@ -63,6 +63,12 @@ public class UserService {
         return this::getByUsername;
     }
 
+    /**
+     * Checks if a user with the given username already exists.
+     *
+     * @param username the username to check
+     * @return true if a user exists with that username, false otherwise
+     */
     public boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
     }

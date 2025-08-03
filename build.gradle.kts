@@ -112,67 +112,60 @@ openApiGenerate {
      }
  }
 
+val jacocoExcludedClasses = listOf(
+    "**/dto/**",
+    "**/entity/**",
+    "**/model/**",
+    "**/api/**",
+    "**/config/**",
+    "**/exception/**",
+    "**/enums/**",
+    "**/*Request*",
+    "**/*Response*",
+    "**/*Exception*",
+    "**/*Application*"
+)
+
 tasks.withType<Test> {
     useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport)
-    finalizedBy(tasks.jacocoTestCoverageVerification)
+    finalizedBy("jacocoTestReport", "jacocoTestCoverageVerification")
 }
 
-tasks.withType<JacocoReport> {
+tasks.named<JacocoReport>("jacocoTestReport").configure {
     dependsOn(tasks.test)
 
     reports {
         xml.required.set(true)
         xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/coverage.xml"))
+        html.required.set(true)
         html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html"))
     }
 
-    afterEvaluate {
-        classDirectories.setFrom(classDirectories.files.map {
-            fileTree(it).matching {
-                exclude(
-                    "**/dto/**",
-                    "**/entity/**",
-                    "**/model/**",
-                    "**/api/**",
-                    "**/config/**",
-                    "**/exception/**",
-                    "**/enums/**",
-                    "**/*Request*",
-                    "**/*Response*",
-                    "**/*Exception*",
-                    "**/*Application*"
-                )
-            }
-        })
+    val filteredClassDirs = files(classDirectories.files.map {
+        fileTree(it).exclude(jacocoExcludedClasses)
+    })
+    classDirectories.setFrom(filteredClassDirs)
+
+    doLast {
+        val report = reports.html.outputLocation.get().asFile.resolve("index.html")
+        println("Jacoco HTML report: file://${report.absolutePath}")
     }
 }
 
-tasks.withType<JacocoCoverageVerification> {
+tasks.named<JacocoCoverageVerification>("jacocoTestCoverageVerification").configure {
     dependsOn(tasks.test)
+
+    val filteredClassDirs = files(classDirectories.files.map {
+        fileTree(it).exclude(jacocoExcludedClasses)
+    })
+    classDirectories.setFrom(filteredClassDirs)
 
     violationRules {
         rule {
             limit {
-                minimum = "0.80".toBigDecimal()
+                minimum = BigDecimal("0.80")
             }
-
-            excludes = listOf(
-                "**/dto/**",
-                "**/entity/**",
-                "**/model/**",
-                "**/api/**",
-                "**/config/**",
-                "**/exception/**",
-                "**/enums/**",
-                "**/*Request*",
-                "**/*Response*",
-                "**/*Exception*",
-                "**/*Application*"
-            )
         }
         isFailOnViolation = false
     }
 }
-
-

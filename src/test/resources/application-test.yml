@@ -1,3 +1,3 @@
 spring:
   liquibase:
-    enabled: false
+    enabled: true

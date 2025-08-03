@@ -1,6 +1,7 @@
 package online.rabko.basketball.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -77,8 +78,22 @@ public class JwtService {
      * @return true if the token is valid and not expired
      */
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        String userName = extractUserName(token);
-        return userName.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        try {
+            return isUserNameMatch(token, userDetails) && !isTokenExpired(token);
+        } catch (ExpiredJwtException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if the username in the token matches the given user details.
+     *
+     * @param token the JWT token
+     * @param userDetails the user details to compare with
+     * @return true if usernames match
+     */
+    public boolean isUserNameMatch(String token, UserDetails userDetails) {
+        return extractUserName(token).equals(userDetails.getUsername());
     }
 
     /**
@@ -100,9 +115,13 @@ public class JwtService {
      * @param token the JWT token
      * @return true if expired
      */
-    private boolean isTokenExpired(String token) {
-        Date expiration = extractExpiration(token);
-        return expiration.before(new Date());
+    public boolean isTokenExpired(String token) {
+        try {
+            Date expiration = extractExpiration(token);
+            return expiration.before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     /**
