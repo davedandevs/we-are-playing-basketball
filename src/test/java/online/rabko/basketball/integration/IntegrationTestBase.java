@@ -13,14 +13,6 @@ import org.springframework.test.context.DynamicPropertySource;
 public abstract class IntegrationTestBase {
 
     /**
-     * Starts the PostgreSQL test container.
-     */
-    @BeforeAll
-    static void startContainer() {
-        PostgreSqlTestContainer.getInstance();
-    }
-
-    /**
      * Overrides the database properties with the values from the PostgreSQL test container.
      *
      * @param registry the dynamic property registry

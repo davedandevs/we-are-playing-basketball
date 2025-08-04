@@ -62,10 +62,10 @@ public class JwtService {
         long tokenValidityInSeconds = 3600;
         Date expiration = new Date(now.getTime() + tokenValidityInSeconds * 1000L);
         return Jwts.builder()
-            .claims(extraClaims)
-            .subject(userDetails.getUsername())
-            .issuedAt(now)
-            .expiration(expiration)
+            .setClaims(extraClaims)
+            .setSubject(userDetails.getUsername())
+            .setIssuedAt(now)
+            .setExpiration(expiration)
             .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
     }
@@ -88,7 +88,7 @@ public class JwtService {
     /**
      * Checks if the username in the token matches the given user details.
      *
-     * @param token the JWT token
+     * @param token       the JWT token
      * @param userDetails the user details to compare with
      * @return true if usernames match
      */
@@ -142,11 +142,11 @@ public class JwtService {
      */
     private Claims extractAllClaims(String token) {
         return Jwts
-            .parser()
+            .parserBuilder()
             .setSigningKey(getSigningKey())
             .build()
-            .parseSignedClaims(token)
-            .getPayload();
+            .parseClaimsJws(token)
+            .getBody();
     }
 
     /**

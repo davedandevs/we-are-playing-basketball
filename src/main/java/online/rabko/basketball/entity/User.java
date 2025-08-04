@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,8 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 @Entity
 @Builder
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
@@ -67,6 +67,22 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(() -> "ROLE_" + role.name());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getPassword() {
+        return password;
     }
 }
 

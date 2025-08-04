@@ -9,6 +9,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +29,10 @@ class JwtServiceTest {
 
     private JwtService jwtService;
     private final String jwtKey = "A7RjhH3kKJLusngyTPWbIZcTvWZTeJdTuMyY79pQccY=";
+
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtKey));
+    }
 
     @BeforeEach
     void setUp() {
@@ -83,11 +88,11 @@ class JwtServiceTest {
 
         String token = jwtService.generateToken(user);
 
-        Claims claims = Jwts.parser()
-            .setSigningKey(Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtKey)))
+        Claims claims = Jwts.parserBuilder()
+            .setSigningKey(getSigningKey())
             .build()
-            .parseSignedClaims(token)
-            .getPayload();
+            .parseClaimsJws(token)
+            .getBody();
 
         assertEquals("user42", claims.getSubject());
         assertEquals(42, claims.get("id"));
@@ -102,7 +107,9 @@ class JwtServiceTest {
             "password",
             List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
+
         String token = jwtService.generateToken(basicUser);
+
         assertNotNull(token);
         assertTrue(jwtService.isTokenValid(token, basicUser));
         assertEquals("basicUser", jwtService.extractUserName(token));
@@ -135,11 +142,10 @@ class JwtServiceTest {
         Date expiredAt = new Date(now.getTime() - 1000);
 
         String token = Jwts.builder()
-            .subject("expiredUser")
-            .issuedAt(new Date(now.getTime() - 2000))
-            .expiration(expiredAt)
-            .signWith(Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtKey)),
-                SignatureAlgorithm.HS256)
+            .setSubject("expiredUser")
+            .setIssuedAt(new Date(now.getTime() - 2000))
+            .setExpiration(expiredAt)
+            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
 
         UserDetails user = new org.springframework.security.core.userdetails.User(
@@ -159,11 +165,12 @@ class JwtServiceTest {
             .password("password")
             .role(Role.USER)
             .build();
+
         String expiredToken = Jwts.builder()
-            .subject(user.getUsername())
-            .issuedAt(new Date(System.currentTimeMillis() - 60000))
-            .expiration(new Date(System.currentTimeMillis() - 1000))
-            .signWith(Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtKey)))
+            .setSubject(user.getUsername())
+            .setIssuedAt(new Date(System.currentTimeMillis() - 60000))
+            .setExpiration(new Date(System.currentTimeMillis() - 1000))
+            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
 
         assertFalse(jwtService.isTokenValid(expiredToken, user));
@@ -172,10 +179,10 @@ class JwtServiceTest {
     @Test
     void shouldReturnTrueWhenTokenIsExpiredHelper() {
         String expiredToken = Jwts.builder()
-            .subject("expiredUser")
-            .issuedAt(new Date(System.currentTimeMillis() - 10_000))
-            .expiration(new Date(System.currentTimeMillis() - 5_000))
-            .signWith(Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtKey)))
+            .setSubject("expiredUser")
+            .setIssuedAt(new Date(System.currentTimeMillis() - 10_000))
+            .setExpiration(new Date(System.currentTimeMillis() - 5_000))
+            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
 
         assertTrue(jwtService.isTokenExpired(expiredToken));
@@ -184,10 +191,10 @@ class JwtServiceTest {
     @Test
     void shouldReturnFalseIfExpiredUsernameDoesNotMatch() {
         String expiredToken = Jwts.builder()
-            .subject("notMatchingUser")
-            .issuedAt(new Date(System.currentTimeMillis() - 10_000))
-            .expiration(new Date(System.currentTimeMillis() - 5_000))
-            .signWith(Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtKey)))
+            .setSubject("notMatchingUser")
+            .setIssuedAt(new Date(System.currentTimeMillis() - 10_000))
+            .setExpiration(new Date(System.currentTimeMillis() - 5_000))
+            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
 
         User user = User.builder()
@@ -209,6 +216,7 @@ class JwtServiceTest {
         );
 
         String token = jwtService.generateToken(user);
+
         assertTrue(jwtService.isUserNameMatch(token, user));
     }
 }
