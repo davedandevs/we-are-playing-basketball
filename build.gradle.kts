@@ -37,6 +37,7 @@ dependencies {
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-security")
     implementation(group = "org.springframework.boot", name = "spring-boot-configuration-processor")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-oauth2-resource-server")
+    implementation(group = "org.springframework.boot", name = "spring-boot-starter-jdbc")
     developmentOnly(group = "org.springframework.boot", name = "spring-boot-devtools")
 
     // Swagger
@@ -53,12 +54,16 @@ dependencies {
     testImplementation(group = "org.springframework.boot", name = "spring-boot-starter-test")
 
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
-    implementation("org.postgresql:postgresql:42.7.6")
+
+    // Database
+    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.liquibase:liquibase-core")
 }
 
 tasks {
     withType<Test> {
         useJUnitPlatform()
+        systemProperty("spring.profiles.active", "test")
     }
     compileJava {
         dependsOn(openApiGenerate)
