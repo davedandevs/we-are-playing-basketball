@@ -1,70 +1,75 @@
 package online.rabko.basketball.unit.controller;
 
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import online.rabko.basketball.config.JwtAuthenticationFilter;
+import io.restassured.http.ContentType;
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import online.rabko.basketball.controller.AuthController;
 import online.rabko.basketball.service.AuthenticationService;
-import online.rabko.basketball.service.JwtService;
 import online.rabko.model.JwtAuthenticationResponse;
 import online.rabko.model.SignInRequest;
 import online.rabko.model.SignUpRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * Unit tests for the {@link AuthController}.
+ * Unit tests for {@link AuthController} using RestAssuredMockMvc.
  */
-@WebMvcTest(AuthController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
 class AuthControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private JwtService jwtService;
-
-    @MockBean
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @MockBean
+    @Mock
     private AuthenticationService authenticationService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @InjectMocks
+    private AuthController authController;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @BeforeEach
+    void setUp() {
+        RestAssuredMockMvc.standaloneSetup(authController);
+    }
 
     @Test
     void signUp_shouldReturnToken() throws Exception {
         SignUpRequest request = new SignUpRequest("testuser", "pass123");
         JwtAuthenticationResponse response = new JwtAuthenticationResponse("mock-token");
+
         when(authenticationService.signUp(any())).thenReturn(response);
-        mockMvc.perform(post("/auth/sign-up")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.token").value("mock-token"));
+
+        given()
+            .contentType(ContentType.JSON)
+            .body(objectMapper.writeValueAsString(request))
+            .when()
+            .post("/auth/sign-up")
+            .then()
+            .statusCode(200)
+            .body("token", equalTo("mock-token"));
     }
 
     @Test
     void signIn_shouldReturnToken() throws Exception {
         SignInRequest request = new SignInRequest("testuser", "pass123");
         JwtAuthenticationResponse response = new JwtAuthenticationResponse("token-123");
+
         when(authenticationService.signIn(any())).thenReturn(response);
-        mockMvc.perform(post("/auth/sign-in")
-                .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.token").value("token-123"));
+
+        given()
+            .contentType(ContentType.JSON)
+            .body(objectMapper.writeValueAsString(request))
+            .when()
+            .post("/auth/sign-in")
+            .then()
+            .statusCode(200)
+            .body("token", equalTo("token-123"));
     }
 }

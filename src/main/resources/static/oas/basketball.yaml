@@ -13,7 +13,7 @@ paths:
   /auth/sign-up:
     post:
       tags: [ Auth ]
-      summary: Register a new user
+      summary: Register a new Basketball app user
       requestBody:
         required: true
         content:
@@ -65,41 +65,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    post:
-      tags: [ Users ]
-      summary: Create a new Basketball app user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '201':
-          description: User created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Conflict (user already exists)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
         '500':
           description: Internal server error
           content:

@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -14,58 +12,60 @@ import online.rabko.basketball.entity.User;
 import online.rabko.basketball.enums.Role;
 import online.rabko.basketball.repository.UserRepository;
 import online.rabko.basketball.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
- * Unit tests for the {@link UserService}.
+ * Unit tests for {@link UserService}.
  */
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
+    @Mock
     private UserRepository userRepository;
+
+    @InjectMocks
     private UserService userService;
 
-    @BeforeEach
-    void setUp() {
-        userRepository = mock(UserRepository.class);
-        userService = new UserService(userRepository);
-    }
-
     @Test
-    void save_shouldSaveUser() {
+    void save_shouldPersistUser() {
         User user = new User(1L, "john", "pwd", Role.USER);
         when(userRepository.save(user)).thenReturn(user);
+
         User result = userService.save(user);
+
         assertEquals(user, result);
-        verify(userRepository, times(1)).save(user);
-    }
-
-    @Test
-    void create_shouldCreateUserWhenUsernameNotExists() {
-        User user = new User(1L, "newuser", "pwd", Role.USER);
-        when(userRepository.existsByUsername(user.getUsername())).thenReturn(false);
-        when(userRepository.save(user)).thenReturn(user);
-
-        User created = userService.create(user);
-
-        assertEquals(user, created);
         verify(userRepository).save(user);
     }
 
     @Test
-    void create_shouldThrowWhenUserAlreadyExists() {
-        User user = new User(1L, "existing", "pwd", Role.USER);
-        when(userRepository.existsByUsername(user.getUsername())).thenReturn(true);
+    void create_shouldReturnUser_whenUsernameNotExists() {
+        User user = new User(1L, "newuser", "pwd", Role.USER);
+        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        when(userRepository.save(user)).thenReturn(user);
 
-        RuntimeException exception = assertThrows(RuntimeException.class,
-            () -> userService.create(user));
-        assertEquals("User with this username already exists", exception.getMessage());
+        User result = userService.create(user);
+
+        assertEquals(user, result);
+        verify(userRepository).save(user);
     }
 
     @Test
-    void getByUsername_shouldReturnUser() {
+    void create_shouldThrowException_whenUsernameAlreadyExists() {
+        User user = new User(1L, "taken", "pwd", Role.USER);
+        when(userRepository.existsByUsername("taken")).thenReturn(true);
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.create(user));
+        assertEquals("User with this username already exists", ex.getMessage());
+    }
+
+    @Test
+    void getByUsername_shouldReturnUser_whenUserExists() {
         User user = new User(1L, "john", "pwd", Role.USER);
         when(userRepository.findByUsername("john")).thenReturn(Optional.of(user));
 
@@ -75,28 +75,33 @@ class UserServiceTest {
     }
 
     @Test
-    void getByUsername_shouldThrowWhenUserNotFound() {
-        when(userRepository.findByUsername("unknown")).thenReturn(Optional.empty());
-        assertThrows(UsernameNotFoundException.class, () -> userService.getByUsername("unknown"));
+    void getByUsername_shouldThrow_whenUserNotFound() {
+        when(userRepository.findByUsername("ghost")).thenReturn(Optional.empty());
+
+        assertThrows(UsernameNotFoundException.class, () -> userService.getByUsername("ghost"));
     }
 
     @Test
-    void userDetailsService_shouldReturnUserDetails() {
+    void userDetailsService_shouldReturnUserDetails_whenUserExists() {
         User user = new User(1L, "john", "pwd", Role.USER);
         when(userRepository.findByUsername("john")).thenReturn(Optional.of(user));
-        UserDetails userDetails = userService.userDetailsService().loadUserByUsername("john");
-        assertEquals(user, userDetails);
+
+        UserDetails details = userService.userDetailsService().loadUserByUsername("john");
+
+        assertEquals(user, details);
     }
 
     @Test
-    void existsByUsername_shouldReturnTrue() {
-        when(userRepository.existsByUsername("check")).thenReturn(true);
-        assertTrue(userService.existsByUsername("check"));
+    void existsByUsername_shouldReturnTrue_whenUserExists() {
+        when(userRepository.existsByUsername("john")).thenReturn(true);
+
+        assertTrue(userService.existsByUsername("john"));
     }
 
     @Test
-    void existsByUsername_shouldReturnFalse() {
-        when(userRepository.existsByUsername("missing")).thenReturn(false);
-        assertFalse(userService.existsByUsername("missing"));
+    void existsByUsername_shouldReturnFalse_whenUserNotExists() {
+        when(userRepository.existsByUsername("ghost")).thenReturn(false);
+
+        assertFalse(userService.existsByUsername("ghost"));
     }
 }

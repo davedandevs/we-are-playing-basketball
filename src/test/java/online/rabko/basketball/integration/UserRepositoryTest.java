@@ -10,46 +10,54 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Integration tests for the {@link UserRepository}.
+ * Integration tests for {@link UserRepository}.
  */
-public class UserRepositoryTest extends IntegrationTestBase {
+class UserRepositoryTest extends IntegrationTestBase {
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
-    void shouldReturnUserWhenExistsByUsername() {
+    void findByUsername_shouldReturnUser_whenUserExists() {
         User user = User.builder()
             .username("existingUser")
             .password("password")
             .role(Role.USER)
             .build();
+
         userRepository.save(user);
-        Optional<User> found = userRepository.findByUsername(user.getUsername());
+
+        Optional<User> found = userRepository.findByUsername("existingUser");
+
         assertThat(found).isPresent();
-        assertThat(found.get().getUsername()).isEqualTo(user.getUsername());
-        assertThat(found.get().getPassword()).isEqualTo(user.getPassword());
-        assertThat(found.get().getRole()).isEqualTo(user.getRole());
+        assertThat(found.get().getUsername()).isEqualTo("existingUser");
+        assertThat(found.get().getPassword()).isEqualTo("password");
+        assertThat(found.get().getRole()).isEqualTo(Role.USER);
     }
 
     @Test
-    void shouldReturnEmptyWhenUserDoesNotExist() {
-        assertThat(userRepository.findByUsername("nonexistentUser")).isEmpty();
+    void findByUsername_shouldReturnEmpty_whenUserDoesNotExist() {
+        Optional<User> found = userRepository.findByUsername("nonexistentUser");
+        assertThat(found).isEmpty();
     }
 
     @Test
-    void shouldReturnTrueIfUsernameExists() {
+    void existsByUsername_shouldReturnTrue_whenUserExists() {
         User user = User.builder()
             .username("checkUser")
             .password("pass123")
             .role(Role.USER)
             .build();
+
         userRepository.save(user);
-        assertThat(userRepository.existsByUsername(user.getUsername())).isTrue();
+
+        boolean exists = userRepository.existsByUsername("checkUser");
+        assertThat(exists).isTrue();
     }
 
     @Test
-    void shouldReturnFalseIfUsernameDoesNotExist() {
-        assertThat(userRepository.existsByUsername("ghostUser")).isFalse();
+    void existsByUsername_shouldReturnFalse_whenUserDoesNotExist() {
+        boolean exists = userRepository.existsByUsername("ghostUser");
+        assertThat(exists).isFalse();
     }
 }
