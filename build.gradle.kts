@@ -74,15 +74,15 @@ dependencies {
 val jacocoExcludedClasses = listOf(
     "**/dto/**",
     "**/entity/**",
-    "**/model/**",
-    "**/api/**",
     "**/config/**",
     "**/exception/**",
     "**/enums/**",
     "**/*Request*",
     "**/*Response*",
     "**/*Exception*",
-    "**/*Application*"
+    "**/*Application*",
+    "**/online/rabko/api/**",
+    "**/online/rabko/model/**"
 )
 val oasResourcesDir = "$projectDir/src/main/resources/static/oas"
 val buildDir = layout.buildDirectory.get()
