@@ -45,7 +45,7 @@ jobs:
           category: "/language:${{ matrix.language }}"
 
   build:
-    name: Build with Gradle
+    name: Build with Gradle and Testcontainers
     runs-on: ubuntu-latest
     needs: analyze
 
@@ -59,11 +59,18 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      - name: Enable Docker (required for Testcontainers)
-        uses: docker/setup-buildx-action@v2
+      - name: Enable Docker (Testcontainers needs this)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io
+          sudo usermod -aG docker $USER
+          sudo systemctl start docker
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Build & Test with Gradle Wrapper
-        run: ./gradlew clean build
+      - name: Build & Run Tests with Gradle
+        env:
+          TESTCONTAINERS_RYUK_DISABLED: true
+          DOCKER_HOST: unix:///var/run/docker.sock
+        run: ./gradlew clean test --info
