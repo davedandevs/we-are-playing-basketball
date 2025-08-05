@@ -14,6 +14,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+
   build-and-push-image:
     runs-on: ubuntu-latest
     permissions:
@@ -54,3 +55,44 @@ jobs:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+
+  deploy:
+    runs-on: self-hosted
+    needs: build-and-push-image
+
+    steps:
+      - name: Extract short repo name
+        run: |
+          SHORT_REPO_NAME=$(echo '${{ github.repository }}' | awk -F'/' '{print $2}')
+          echo "SHORT_REPO_NAME=$SHORT_REPO_NAME" >> $GITHUB_ENV
+
+      - name: Pull latest image
+        run: |
+          IMAGE_TAG=pr-15
+          docker pull "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$IMAGE_TAG"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: Stop and remove existing container
+        run: |
+          docker stop $SHORT_REPO_NAME || true
+          docker rm $SHORT_REPO_NAME || true
+
+      - name: Run new container
+        run: |
+          docker run -d --name "$SHORT_REPO_NAME" \
+          -e SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }} \
+          -e SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }} \
+          -e SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }} \
+          --network nginx-network \
+          "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$IMAGE_TAG"
+
+      - name: Update Nginx config with container IP and reload
+        run: |
+          CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $SHORT_REPO_NAME)
+          sudo sed -i "s|proxy_pass .*;|proxy_pass http://$CONTAINER_IP:${{ secrets.APP_PORT }};|" ${{ secrets.NGINX_CONFIG_FILE }}
+          sudo nginx -s reload
+
+      - name: Clean up unused Docker images
+        run: |
+          docker image prune -af
+          docker container prune -f
