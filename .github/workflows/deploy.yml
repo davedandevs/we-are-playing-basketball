@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 env:
@@ -68,7 +65,7 @@ jobs:
 
       - name: Pull latest image
         run: |
-          IMAGE_TAG=pr-15
+          IMAGE_TAG=${{ github.ref_name }}
           docker pull "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$IMAGE_TAG"
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
