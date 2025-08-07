@@ -33,43 +33,41 @@ configurations {
 
 dependencies {
     // Spring Boot
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-configuration-processor")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation(group = "org.springframework.boot", name = "spring-boot-starter-web")
+    implementation(group = "org.springframework.boot", name = "spring-boot-starter-security")
+    implementation(group = "org.springframework.boot", name = "spring-boot-configuration-processor")
+    implementation(group = "org.springframework.boot", name = "spring-boot-starter-oauth2-resource-server")
+    implementation(group = "org.springframework.boot", name = "spring-boot-starter-jdbc")
+    implementation(group = "org.springframework.boot", name = "spring-boot-starter-data-jpa")
+    developmentOnly(group = "org.springframework.boot", name = "spring-boot-devtools")
 
     // Swagger
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
-
-    // Util
-    implementation("org.apache.commons:commons-csv:1.14.0")
+    implementation(group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version = "2.6.0")
 
     // Lombok
-    compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
+    compileOnly(group = "org.projectlombok", name = "lombok")
+    annotationProcessor(group = "org.projectlombok", name = "lombok")
 
     // Test
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.mockito:mockito-core")
-    testImplementation("org.mockito:mockito-junit-jupiter")
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:postgresql")
-    testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("io.rest-assured:spring-mock-mvc")
+    testImplementation(group = "org.springframework.boot", name = "spring-boot-starter-test")
+    testImplementation(group = "org.junit.jupiter", name = "junit-jupiter")
+    testImplementation(group = "org.mockito", name = "mockito-core")
+    testImplementation(group = "org.mockito", name = "mockito-junit-jupiter")
+    testImplementation(group = "org.testcontainers", name = "junit-jupiter")
+    testImplementation(group = "org.testcontainers", name = "postgresql")
+    testImplementation(group = "org.springframework.security", name = "spring-security-test")
+    testImplementation(group = "io.rest-assured", name = "spring-mock-mvc")
 
     // JWT
-    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
-    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
-    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    implementation(group = "io.jsonwebtoken", name = "jjwt-api", version = "0.11.5")
+    implementation(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.5")
+    implementation(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.5")
 
     // Database
-    runtimeOnly("org.postgresql:postgresql")
-    implementation("org.liquibase:liquibase-core")
+    runtimeOnly(group = "org.postgresql", name = "postgresql")
+    implementation(group = "org.liquibase", name = "liquibase-core")
 }
+
 
 val jacocoExcludedClasses = listOf(
     "**/dto/**",
@@ -77,12 +75,9 @@ val jacocoExcludedClasses = listOf(
     "**/config/**",
     "**/exception/**",
     "**/enums/**",
-    "**/*Request*",
-    "**/*Response*",
-    "**/*Exception*",
     "**/*Application*",
-    "**/online/rabko/api/**",
-    "**/online/rabko/model/**"
+    "**/api/**",
+    "**/model/**"
 )
 val oasResourcesDir = "$projectDir/src/main/resources/static/oas"
 val buildDir = layout.buildDirectory.get()
