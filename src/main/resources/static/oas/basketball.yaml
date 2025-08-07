@@ -1,1518 +1,1530 @@
-openapi: 3.1.0
-info:
-  title: Basketball API
-  description: API for managing basketball teams, players, matches, and statistics
-  version: 1.0.0
-servers:
-  - url: http://localhost:8080
-    description: Server url
-security:
-  - bearerAuth: [ ]
+  openapi: 3.1.0
+  info:
+    title: Basketball API
+    description: API for managing basketball teams, players, matches, and statistics
+    version: 1.0.0
+  servers:
+    - url: http://localhost:8080
+      description: Server url
+  security:
+    - bearerAuth: [ ]
+    - clientCredentials: [ ]
 
-paths:
-  /auth/sign-up:
-    post:
-      tags: [ Auth ]
-      summary: Register a new Basketball app user
-      requestBody:
-        required: true
-        content:
-          application/json:
+  paths:
+    /auth/sign-up:
+      post:
+        tags: [ Auth ]
+        summary: Register a new Basketball app user
+        security: [ ]
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpRequest'
+        responses:
+          '200':
+            description: Registration successful, returns JWT
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/JwtAuthenticationResponse'
+          '400':
+            description: Invalid input data
+          '409':
+            description: User already exists
+
+    /auth/token:
+      post:
+        tags: [ Auth ]
+        summary: Authenticate user and return JWT
+        security: [ ]
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInRequest'
+        responses:
+          '200':
+            description: Authentication successful, returns JWT
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/JwtAuthenticationResponse'
+          '401':
+            description: Invalid username or password
+
+    /users:
+      get:
+        tags: [ Users ]
+        summary: Get current list of Basketball app users
+        responses:
+          '200':
+            description: List of users retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/User'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /users/{id}:
+      get:
+        tags: [ Users ]
+        summary: Get Basketball app user by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/SignUpRequest'
-      responses:
-        '200':
-          description: Registration successful, returns JWT
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JwtAuthenticationResponse'
-        '400':
-          description: Invalid input data
-        '409':
-          description: User already exists
-
-  /auth/sign-in:
-    post:
-      tags: [ Auth ]
-      summary: Authenticate user and return JWT
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SignInRequest'
-      responses:
-        '200':
-          description: Authentication successful, returns JWT
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JwtAuthenticationResponse'
-        '401':
-          description: Invalid username or password
-
-  /users:
-    get:
-      tags: [ Users ]
-      summary: Get current list of Basketball app users
-      responses:
-        '200':
-          description: List of users retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
+              type: integer
+              description: ID of the user to retrieve
+        responses:
+          '200':
+            description: User retrieved successfully
+            content:
+              application/json:
+                schema:
                   $ref: '#/components/schemas/User'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          '404':
+            description: User not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-  /users/{id}:
-    get:
-      tags: [ Users ]
-      summary: Get Basketball app user by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the user to retrieve
-      responses:
-        '200':
-          description: User retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '404':
-          description: User not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    put:
-      tags: [ Users ]
-      summary: Update Basketball app user by ID
-      description: The ID in the request body is ignored, only the path parameter ID is used
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the user to update
-      requestBody:
-        required: true
-        content:
-          application/json:
+      put:
+        tags: [ Users ]
+        summary: Update Basketball app user by ID
+        description: The ID in the request body is ignored, only the path parameter ID is used
+        parameters:
+          - name: id
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '200':
-          description: User updated successfully
+              type: integer
+              description: ID of the user to update
+        requestBody:
+          required: true
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: User not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+        responses:
+          '200':
+            description: User updated successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/User'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '404':
+            description: User not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-    delete:
-      tags: [ Users ]
-      summary: Delete Basketball app user by ID
-      parameters:
-        - name: id
-          in: path
+      delete:
+        tags: [ Users ]
+        summary: Delete Basketball app user by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+              description: ID of the user to delete
+        responses:
+          '204':
+            description: User deleted successfully
+          '404':
+            description: User not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /players:
+      get:
+        tags: [ Players ]
+        summary: Get list of players
+        responses:
+          '200':
+            description: List of players retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Player'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+      post:
+        tags: [ Players ]
+        summary: Add a new player
+        requestBody:
           required: true
-          schema:
-            type: integer
-            description: ID of the user to delete
-      responses:
-        '204':
-          description: User deleted successfully
-        '404':
-          description: User not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /players:
-    get:
-      tags: [ Players ]
-      summary: Get list of players
-      responses:
-        '200':
-          description: List of players retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
+                $ref: '#/components/schemas/Player'
+        responses:
+          '201':
+            description: Player created successfully
+            content:
+              application/json:
+                schema:
                   $ref: '#/components/schemas/Player'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-    post:
-      tags: [ Players ]
-      summary: Add a new player
-      requestBody:
-        required: true
-        content:
-          application/json:
+    /players/{id}:
+      get:
+        tags: [ Players ]
+        summary: Get player by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/Player'
-      responses:
-        '201':
-          description: Player created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Player'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+              type: integer
+              description: ID of the player to retrieve
+        responses:
+          '200':
+            description: Player retrieved successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Player'
+          '404':
+            description: Player not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-  /players/{id}:
-    get:
-      tags: [ Players ]
-      summary: Get player by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the player to retrieve
-      responses:
-        '200':
-          description: Player retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Player'
-        '404':
-          description: Player not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    put:
-      tags: [ Players ]
-      summary: Update player by ID
-      description: The ID in the request body is ignored, only the path parameter ID is used
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the player to update
-      requestBody:
-        required: true
-        content:
-          application/json:
+      put:
+        tags: [ Players ]
+        summary: Update player by ID
+        description: The ID in the request body is ignored, only the path parameter ID is used
+        parameters:
+          - name: id
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/Player'
-      responses:
-        '200':
-          description: Player updated successfully
+              type: integer
+              description: ID of the player to update
+        requestBody:
+          required: true
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Player'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Player not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+        responses:
+          '200':
+            description: Player updated successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Player'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '404':
+            description: Player not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-    delete:
-      tags: [ Players ]
-      summary: Delete player by ID
-      parameters:
-        - name: id
-          in: path
+      delete:
+        tags: [ Players ]
+        summary: Delete player by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+              description: ID of the player to delete
+        responses:
+          '204':
+            description: Player deleted successfully
+          '404':
+            description: Player not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /teams:
+      get:
+        tags: [ Teams ]
+        summary: Get list of teams
+        responses:
+          '200':
+            description: List of teams retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Team'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+      post:
+        tags: [ Teams ]
+        summary: Add a new team
+        requestBody:
           required: true
-          schema:
-            type: integer
-            description: ID of the player to delete
-      responses:
-        '204':
-          description: Player deleted successfully
-        '404':
-          description: Player not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /teams:
-    get:
-      tags: [ Teams ]
-      summary: Get list of teams
-      responses:
-        '200':
-          description: List of teams retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
+                $ref: '#/components/schemas/Team'
+        responses:
+          '201':
+            description: Team created successfully
+            content:
+              application/json:
+                schema:
                   $ref: '#/components/schemas/Team'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '409':
+            description: Conflict (team already exists)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-    post:
-      tags: [ Teams ]
-      summary: Add a new team
-      requestBody:
-        required: true
-        content:
-          application/json:
+    /teams/{id}:
+      get:
+        tags: [ Teams ]
+        summary: Get team by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/Team'
-      responses:
-        '201':
-          description: Team created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Team'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Conflict (team already exists)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+              type: integer
+              description: ID of the team to retrieve
+        responses:
+          '200':
+            description: Team retrieved successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Team'
+          '404':
+            description: Team not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-  /teams/{id}:
-    get:
-      tags: [ Teams ]
-      summary: Get team by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the team to retrieve
-      responses:
-        '200':
-          description: Team retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Team'
-        '404':
-          description: Team not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    put:
-      tags: [ Teams ]
-      summary: Update team by ID
-      description: The ID in the request body is ignored, only the path parameter ID is used
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the team to update
-      requestBody:
-        required: true
-        content:
-          application/json:
+      put:
+        tags: [ Teams ]
+        summary: Update team by ID
+        description: The ID in the request body is ignored, only the path parameter ID is used
+        parameters:
+          - name: id
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/Team'
-      responses:
-        '200':
-          description: Team updated successfully
+              type: integer
+              description: ID of the team to update
+        requestBody:
+          required: true
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Team'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Team not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Conflict (team already exists)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+        responses:
+          '200':
+            description: Team updated successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Team'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '404':
+            description: Team not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '409':
+            description: Conflict (team already exists)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-    delete:
-      tags: [ Teams ]
-      summary: Delete team by ID
-      parameters:
-        - name: id
-          in: path
+      delete:
+        tags: [ Teams ]
+        summary: Delete team by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+              description: ID of the team to delete
+        responses:
+          '204':
+            description: Team deleted successfully
+          '404':
+            description: Team not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '409':
+            description: Conflict (team has players or matches)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /seasons:
+      get:
+        tags: [ Seasons ]
+        summary: Get list of seasons
+        responses:
+          '200':
+            description: List of seasons retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Season'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+      post:
+        tags: [ Seasons ]
+        summary: Add a new season
+        requestBody:
           required: true
-          schema:
-            type: integer
-            description: ID of the team to delete
-      responses:
-        '204':
-          description: Team deleted successfully
-        '404':
-          description: Team not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Conflict (team has players or matches)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /seasons:
-    get:
-      tags: [ Seasons ]
-      summary: Get list of seasons
-      responses:
-        '200':
-          description: List of seasons retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
+                $ref: '#/components/schemas/Season'
+        responses:
+          '201':
+            description: Season created successfully
+            content:
+              application/json:
+                schema:
                   $ref: '#/components/schemas/Season'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '409':
+            description: Conflict (season already exists or date overlap)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-    post:
-      tags: [ Seasons ]
-      summary: Add a new season
-      requestBody:
-        required: true
-        content:
-          application/json:
+    /seasons/{id}:
+      get:
+        tags: [ Seasons ]
+        summary: Get season by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/Season'
-      responses:
-        '201':
-          description: Season created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Season'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Conflict (season already exists or date overlap)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+              type: integer
+              description: ID of the season to retrieve
+        responses:
+          '200':
+            description: Season retrieved successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Season'
+          '404':
+            description: Season not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-  /seasons/{id}:
-    get:
-      tags: [ Seasons ]
-      summary: Get season by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the season to retrieve
-      responses:
-        '200':
-          description: Season retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Season'
-        '404':
-          description: Season not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    put:
-      tags: [ Seasons ]
-      summary: Update season by ID
-      description: The ID in the request body is ignored, only the path parameter ID is used
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the season to update
-      requestBody:
-        required: true
-        content:
-          application/json:
+      put:
+        tags: [ Seasons ]
+        summary: Update season by ID
+        description: The ID in the request body is ignored, only the path parameter ID is used
+        parameters:
+          - name: id
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/Season'
-      responses:
-        '200':
-          description: Season updated successfully
+              type: integer
+              description: ID of the season to update
+        requestBody:
+          required: true
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Season'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Season not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Conflict (season already exists or date overlap)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+        responses:
+          '200':
+            description: Season updated successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Season'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '404':
+            description: Season not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '409':
+            description: Conflict (season already exists or date overlap)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-    delete:
-      tags: [ Seasons ]
-      summary: Delete season by ID
-      parameters:
-        - name: id
-          in: path
+      delete:
+        tags: [ Seasons ]
+        summary: Delete season by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+              description: ID of the season to delete
+        responses:
+          '204':
+            description: Season deleted successfully
+          '404':
+            description: Season not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '409':
+            description: Conflict (season has matches)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /matches:
+      get:
+        tags: [ Matches ]
+        summary: Get list of all matches
+        responses:
+          '200':
+            description: List of matches retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Match'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+      post:
+        tags: [ Matches ]
+        summary: Create a new match
+        requestBody:
           required: true
-          schema:
-            type: integer
-            description: ID of the season to delete
-      responses:
-        '204':
-          description: Season deleted successfully
-        '404':
-          description: Season not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Conflict (season has matches)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /matches:
-    get:
-      tags: [ Matches ]
-      summary: Get list of all matches
-      responses:
-        '200':
-          description: List of matches retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
+                $ref: '#/components/schemas/Match'
+        responses:
+          '201':
+            description: Match created successfully
+            content:
+              application/json:
+                schema:
                   $ref: '#/components/schemas/Match'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '404':
+            description: Season or team not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '409':
+            description: Conflict (same home and away team)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-    post:
-      tags: [ Matches ]
-      summary: Create a new match
-      requestBody:
-        required: true
-        content:
-          application/json:
+    /matches/{id}:
+      get:
+        tags: [ Matches ]
+        summary: Get match by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/Match'
-      responses:
-        '201':
-          description: Match created successfully
+              type: integer
+              description: ID of the match to retrieve
+        responses:
+          '200':
+            description: Match retrieved successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Match'
+          '404':
+            description: Match not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+      put:
+        tags: [ Matches ]
+        summary: Update match by ID
+        description: The ID in the request body is ignored, only the path parameter ID is used
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+              description: ID of the match to update
+        requestBody:
+          required: true
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Match'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Season or team not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Conflict (same home and away team)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+        responses:
+          '200':
+            description: Match updated successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Match'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '404':
+            description: Match, season or team not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '409':
+            description: Conflict (same home and away team)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-  /matches/{id}:
-    get:
-      tags: [ Matches ]
-      summary: Get match by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the match to retrieve
-      responses:
-        '200':
-          description: Match retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Match'
-        '404':
-          description: Match not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    put:
-      tags: [ Matches ]
-      summary: Update match by ID
-      description: The ID in the request body is ignored, only the path parameter ID is used
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the match to update
-      requestBody:
-        required: true
-        content:
-          application/json:
+      delete:
+        tags: [ Matches ]
+        summary: Delete match by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/Match'
-      responses:
-        '200':
-          description: Match updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Match'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Match, season or team not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Conflict (same home and away team)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+              type: integer
+              description: ID of the match to delete
+        responses:
+          '204':
+            description: Match deleted successfully
+          '404':
+            description: Match not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-    delete:
-      tags: [ Matches ]
-      summary: Delete match by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the match to delete
-      responses:
-        '204':
-          description: Match deleted successfully
-        '404':
-          description: Match not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /matches/{matchId}/stats:
-    get:
-      tags: [ Matches ]
-      summary: Get player statistics for a match
-      parameters:
-        - name: matchId
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the match to get statistics for
-      responses:
-        '200':
-          description: Match statistics retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PlayerStats'
-        '404':
-          description: Match not found or no statistics available
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    post:
-      tags: [ Matches ]
-      summary: Add/update player statistics for a match
-      parameters:
-        - name: matchId
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the match to add statistics for
-      requestBody:
-        required: true
-        content:
-          application/json:
+    /matches/{matchId}/stats:
+      get:
+        tags: [ Matches ]
+        summary: Get player statistics for a match
+        parameters:
+          - name: matchId
+            in: path
+            required: true
             schema:
-              $ref: '#/components/schemas/PlayerStats'
-      responses:
-        '201':
-          description: Statistics created/updated successfully
+              type: integer
+              description: ID of the match to get statistics for
+        responses:
+          '200':
+            description: Match statistics retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PlayerStats'
+          '404':
+            description: Match not found or no statistics available
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+      post:
+        tags: [ Matches ]
+        summary: Add/update player statistics for a match
+        parameters:
+          - name: matchId
+            in: path
+            required: true
+            schema:
+              type: integer
+              description: ID of the match to add statistics for
+        requestBody:
+          required: true
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PlayerStats'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Match, player or team not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /stats/players/{id}:
-    get:
-      tags: [ Stats ]
-      summary: Get player statistics record by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the player statistics record to retrieve
-      responses:
-        '200':
-          description: Player statistics record retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PlayerStats'
-        '404':
-          description: Player statistics record not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-    delete:
-      tags: [ Stats ]
-      summary: Delete player statistics record by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            description: ID of the player statistics record to delete
-      responses:
-        '204':
-          description: Player statistics record deleted successfully
-        '404':
-          description: Player statistics record not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /stats/players/top-scorers:
-    get:
-      tags: [ Stats ]
-      summary: Get top scorers
-      parameters:
-        - name: season_id
-          in: query
-          required: false
-          schema:
-            type: integer
-            description: Filter by season ID
-      responses:
-        '200':
-          description: Top scorers retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
+        responses:
+          '201':
+            description: Statistics created/updated successfully
+            content:
+              application/json:
+                schema:
                   $ref: '#/components/schemas/PlayerStats'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '404':
+            description: Match, player or team not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-  /stats/players/top-assisters:
-    get:
-      tags: [ Stats ]
-      summary: Get top assisters
-      parameters:
-        - name: season_id
-          in: query
-          required: false
-          schema:
-            type: integer
-            description: Filter by season ID
-      responses:
-        '200':
-          description: Top assisters retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
+    /stats/players/{id}:
+      get:
+        tags: [ Stats ]
+        summary: Get player statistics record by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+              description: ID of the player statistics record to retrieve
+        responses:
+          '200':
+            description: Player statistics record retrieved successfully
+            content:
+              application/json:
+                schema:
                   $ref: '#/components/schemas/PlayerStats'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          '404':
+            description: Player statistics record not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
 
-  /stats/players/top-rebounders:
-    get:
-      tags: [ Stats ]
-      summary: Get top rebounders
-      parameters:
-        - name: season_id
-          in: query
-          required: false
-          schema:
+      delete:
+        tags: [ Stats ]
+        summary: Delete player statistics record by ID
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: integer
+              description: ID of the player statistics record to delete
+        responses:
+          '204':
+            description: Player statistics record deleted successfully
+          '404':
+            description: Player statistics record not found
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+    /stats/players/top-scorers:
+      get:
+        tags: [ Stats ]
+        summary: Get top scorers
+        parameters:
+          - name: season_id
+            in: query
+            required: false
+            schema:
+              type: integer
+              description: Filter by season ID
+        responses:
+          '200':
+            description: Top scorers retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PlayerStats'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /stats/players/top-assisters:
+      get:
+        tags: [ Stats ]
+        summary: Get top assisters
+        parameters:
+          - name: season_id
+            in: query
+            required: false
+            schema:
+              type: integer
+              description: Filter by season ID
+        responses:
+          '200':
+            description: Top assisters retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PlayerStats'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /stats/players/top-rebounders:
+      get:
+        tags: [ Stats ]
+        summary: Get top rebounders
+        parameters:
+          - name: season_id
+            in: query
+            required: false
+            schema:
+              type: integer
+              description: Filter by season ID
+        responses:
+          '200':
+            description: Top rebounders retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PlayerStats'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /stats/players/top-stealers:
+      get:
+        tags: [ Stats ]
+        summary: Get top stealers
+        parameters:
+          - name: season_id
+            in: query
+            required: false
+            schema:
+              type: integer
+              description: Filter by season ID
+        responses:
+          '200':
+            description: Top stealers retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PlayerStats'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /stats/players/top-blockers:
+      get:
+        tags: [ Stats ]
+        summary: Get top blockers
+        parameters:
+          - name: season_id
+            in: query
+            required: false
+            schema:
+              type: integer
+              description: Filter by season ID
+        responses:
+          '200':
+            description: Top blockers retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PlayerStats'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /stats/players/efficiency-rating:
+      get:
+        tags: [ Stats ]
+        summary: Get player efficiency rating
+        parameters:
+          - name: season_id
+            in: query
+            required: false
+            schema:
+              type: integer
+              description: Filter by season ID
+        responses:
+          '200':
+            description: Efficiency ratings retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PlayerStats'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /stats/players/minutes-played:
+      get:
+        tags: [ Stats ]
+        summary: Get players by minutes played
+        parameters:
+          - name: season_id
+            in: query
+            required: false
+            schema:
+              type: integer
+              description: Filter by season ID
+        responses:
+          '200':
+            description: Minutes played stats retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PlayerStats'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /stats/teams/average-points:
+      get:
+        tags: [ Stats ]
+        summary: Get teams by average points per match
+        parameters:
+          - name: season_id
+            in: query
+            required: false
+            schema:
+              type: integer
+              description: Filter by season ID
+        responses:
+          '200':
+            description: Average points stats retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TeamStats'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /stats/teams/win-rate:
+      get:
+        tags: [ Stats ]
+        summary: Get teams by win rate
+        parameters:
+          - name: season_id
+            in: query
+            required: false
+            schema:
+              type: integer
+              description: Filter by season ID
+        responses:
+          '200':
+            description: Win rate stats retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TeamStats'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+    /stats/matches/highest-scoring:
+      get:
+        tags: [ Stats ]
+        summary: Get highest scoring matches
+        parameters:
+          - name: season_id
+            in: query
+            required: false
+            schema:
+              type: integer
+              description: Filter by season ID
+        responses:
+          '200':
+            description: Highest scoring matches retrieved successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Match'
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+  components:
+    securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+
+      clientCredentials:
+        type: oauth2
+        flows:
+          clientCredentials:
+            tokenUrl: /auth/token
+            scopes: { }
+
+    schemas:
+      Role:
+        type: string
+        enum: [ ADMIN, USER ]
+        description: User role
+
+      SignUpRequest:
+        type: object
+        properties:
+          username:
+            type: string
+            example: "davedandevs"
+          password:
+            type: string
+            example: "superSecret123"
+        required: [ username, password ]
+
+      SignInRequest:
+        type: object
+        properties:
+          username:
+            type: string
+            example: "davedandevs"
+          password:
+            type: string
+            example: "superSecret123"
+        required: [ username, password ]
+
+      JwtAuthenticationResponse:
+        type: object
+        properties:
+          token:
+            type: string
+            description: JWT access token
+            example: "eyJhbGciOiJIUzI1NiIsInR..."
+        required: [ token ]
+
+      User:
+        type: object
+        properties:
+          id:
             type: integer
-            description: Filter by season ID
-      responses:
-        '200':
-          description: Top rebounders retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PlayerStats'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+            description: Unique identifier for the user
+            example: 1
+          username:
+            type: string
+            description: User name
+            example: "davedandevs"
+          password:
+            type: string
+            description: User password (hashed)
+            example: "$2a$10$N9qo8uLOickgx2ZMRZoMy..."
+          first_name:
+            type: string
+            description: User's first name
+            example: "Dave"
+          last_name:
+            type: string
+            description: User's last name
+            example: "Dan"
+          role:
+            $ref: '#/components/schemas/Role'
+        required: [ id, username, password, role ]
 
-  /stats/players/top-stealers:
-    get:
-      tags: [ Stats ]
-      summary: Get top stealers
-      parameters:
-        - name: season_id
-          in: query
-          required: false
-          schema:
+      Player:
+        type: object
+        properties:
+          id:
             type: integer
-            description: Filter by season ID
-      responses:
-        '200':
-          description: Top stealers retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PlayerStats'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /stats/players/top-blockers:
-    get:
-      tags: [ Stats ]
-      summary: Get top blockers
-      parameters:
-        - name: season_id
-          in: query
-          required: false
-          schema:
+            description: Unique identifier for the player
+            example: 1
+          team_id:
             type: integer
-            description: Filter by season ID
-      responses:
-        '200':
-          description: Top blockers retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PlayerStats'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /stats/players/efficiency-rating:
-    get:
-      tags: [ Stats ]
-      summary: Get player efficiency rating
-      parameters:
-        - name: season_id
-          in: query
-          required: false
-          schema:
+            description: ID of the team the player belongs to
+            example: 5
+          first_name:
+            type: string
+            description: Player's first name
+            example: "Lebron"
+          last_name:
+            type: string
+            description: Player's last name
+            example: "James"
+          position:
+            type: string
+            description: Player's position on the court
+            example: "Power Forward"
+          age:
             type: integer
-            description: Filter by season ID
-      responses:
-        '200':
-          description: Efficiency ratings retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PlayerStats'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /stats/players/minutes-played:
-    get:
-      tags: [ Stats ]
-      summary: Get players by minutes played
-      parameters:
-        - name: season_id
-          in: query
-          required: false
-          schema:
+            description: Player's age
+            example: 40
+          height:
             type: integer
-            description: Filter by season ID
-      responses:
-        '200':
-          description: Minutes played stats retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PlayerStats'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /stats/teams/average-points:
-    get:
-      tags: [ Stats ]
-      summary: Get teams by average points per match
-      parameters:
-        - name: season_id
-          in: query
-          required: false
-          schema:
+            description: Player's height in centimeters
+            example: 206
+          weight:
             type: integer
-            description: Filter by season ID
-      responses:
-        '200':
-          description: Average points stats retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TeamStats'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+            description: Player's weight in kilograms
+            example: 110
+        required: [ id, first_name, last_name ]
 
-  /stats/teams/win-rate:
-    get:
-      tags: [ Stats ]
-      summary: Get teams by win rate
-      parameters:
-        - name: season_id
-          in: query
-          required: false
-          schema:
+      Team:
+        type: object
+        properties:
+          id:
             type: integer
-            description: Filter by season ID
-      responses:
-        '200':
-          description: Win rate stats retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TeamStats'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+            description: Unique identifier for the team
+            example: 1
+          name:
+            type: string
+            description: Team name
+            example: "Los Angeles Lakers"
+        required: [ id, name ]
 
-  /stats/matches/highest-scoring:
-    get:
-      tags: [ Stats ]
-      summary: Get highest scoring matches
-      parameters:
-        - name: season_id
-          in: query
-          required: false
-          schema:
+      Season:
+        type: object
+        properties:
+          id:
             type: integer
-            description: Filter by season ID
-      responses:
-        '200':
-          description: Highest scoring matches retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Match'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+            description: Unique identifier for the season
+            example: 1
+          name:
+            type: string
+            description: Season name
+            example: "2023-2024 Regular Season"
+          start_date:
+            type: string
+            format: date
+            description: Season start date (YYYY-MM-DD)
+            example: "2023-10-01"
+          end_date:
+            type: string
+            format: date
+            description: Season end date (YYYY-MM-DD)
+            example: "2024-04-30"
+        required: [ id, name, start_date, end_date ]
 
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+      Match:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Unique identifier for the match
+            example: 1
+          season_id:
+            type: integer
+            description: ID of the season the match belongs to
+            example: 1
+          date:
+            type: string
+            format: date
+            description: Match date (YYYY-MM-DD)
+            example: "2023-11-15"
+          home_team_id:
+            type: integer
+            description: ID of the home team
+            example: 1
+          away_team_id:
+            type: integer
+            description: ID of the away team
+            example: 2
+          home_team_score:
+            type: integer
+            description: Home team final score
+            example: 98
+          away_team_score:
+            type: integer
+            description: Away team final score
+            example: 102
+        required: [ id, season_id, date, home_team_id, away_team_id ]
 
-  schemas:
-    SignUpRequest:
-      type: object
-      properties:
-        username:
-          type: string
-          example: "davedandevs"
-        password:
-          type: string
-          example: "superSecret123"
-      required: [ username, password ]
+      PlayerStats:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Unique identifier for the statistics record
+            example: 1
+          match_id:
+            type: integer
+            description: ID of the match these stats belong to
+            example: 1
+          player_id:
+            type: integer
+            description: ID of the player these stats belong to
+            example: 1
+          team_id:
+            type: integer
+            description: ID of the team the player was on during this match
+            example: 1
+          stats:
+            type: object
+            description: Player statistics for the match
+            properties:
+              points:
+                type: integer
+                description: Points scored
+                example: 25
+              assists:
+                type: integer
+                description: Assists made
+                example: 7
+              rebounds:
+                type: integer
+                description: Rebounds grabbed
+                example: 10
+              steals:
+                type: integer
+                description: Steals made
+                example: 2
+              blocks:
+                type: integer
+                description: Blocks made
+                example: 1
+              minutes_played:
+                type: integer
+                description: Minutes played
+                example: 36
+              field_goals_made:
+                type: integer
+                description: Field goals made
+                example: 10
+              field_goals_attempted:
+                type: integer
+                description: Field goals attempted
+                example: 18
+              three_points_made:
+                type: integer
+                description: Three-pointers made
+                example: 3
+              three_points_attempted:
+                type: integer
+                description: Three-pointers attempted
+                example: 5
+              free_throws_made:
+                type: integer
+                description: Free throws made
+                example: 2
+              free_throws_attempted:
+                type: integer
+                description: Free throws attempted
+                example: 2
+              turnovers:
+                type: integer
+                description: Turnovers committed
+                example: 3
+              fouls:
+                type: integer
+                description: Fouls committed
+                example: 2
+        required: [ id, match_id, player_id, team_id, stats ]
 
-    SignInRequest:
-      type: object
-      properties:
-        username:
-          type: string
-          example: "davedandevs"
-        password:
-          type: string
-          example: "superSecret123"
-      required: [ username, password ]
+      TeamStats:
+        type: object
+        properties:
+          team_id:
+            type: integer
+            description: Unique identifier for the team
+            example: 1
+          team_name:
+            type: string
+            description: Team name
+            example: "Los Angeles Lakers"
+          average_points:
+            type: number
+            description: Average points per match
+            example: 102.5
+          win_rate:
+            type: number
+            description: Win rate percentage (0-1)
+            example: 0.75
+          total_wins:
+            type: integer
+            description: Total wins
+            example: 12
+          total_losses:
+            type: integer
+            description: Total losses
+            example: 4
+        required: [ team_id, team_name ]
 
-    JwtAuthenticationResponse:
-      type: object
-      properties:
-        token:
-          type: string
-          description: JWT access token
-          example: "eyJhbGciOiJIUzI1NiIsInR..."
-      required: [ token ]
-
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the user
-          example: 1
-        username:
-          type: string
-          description: User name
-          example: "davedandevs"
-        password:
-          type: string
-          description: User password (hashed)
-          example: "$2a$10$N9qo8uLOickgx2ZMRZoMy..."
-        first_name:
-          type: string
-          description: User's first name
-          example: "Dave"
-        last_name:
-          type: string
-          description: User's last name
-          example: "Dan"
-        role:
-          type: string
-          enum: [ admin, user ]
-          description: User role (admin or user)
-          example: "admin"
-      required: [ id, username, password, role ]
-
-    Player:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the player
-          example: 1
-        team_id:
-          type: integer
-          description: ID of the team the player belongs to
-          example: 5
-        first_name:
-          type: string
-          description: Player's first name
-          example: "Lebron"
-        last_name:
-          type: string
-          description: Player's last name
-          example: "James"
-        position:
-          type: string
-          description: Player's position on the court
-          example: "Power Forward"
-        age:
-          type: integer
-          description: Player's age
-          example: 40
-        height:
-          type: integer
-          description: Player's height in centimeters
-          example: 206
-        weight:
-          type: integer
-          description: Player's weight in kilograms
-          example: 110
-      required: [ id, first_name, last_name ]
-
-    Team:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the team
-          example: 1
-        name:
-          type: string
-          description: Team name
-          example: "Los Angeles Lakers"
-      required: [ id, name ]
-
-    Season:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the season
-          example: 1
-        name:
-          type: string
-          description: Season name
-          example: "2023-2024 Regular Season"
-        start_date:
-          type: string
-          format: date
-          description: Season start date (YYYY-MM-DD)
-          example: "2023-10-01"
-        end_date:
-          type: string
-          format: date
-          description: Season end date (YYYY-MM-DD)
-          example: "2024-04-30"
-      required: [ id, name, start_date, end_date ]
-
-    Match:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the match
-          example: 1
-        season_id:
-          type: integer
-          description: ID of the season the match belongs to
-          example: 1
-        date:
-          type: string
-          format: date
-          description: Match date (YYYY-MM-DD)
-          example: "2023-11-15"
-        home_team_id:
-          type: integer
-          description: ID of the home team
-          example: 1
-        away_team_id:
-          type: integer
-          description: ID of the away team
-          example: 2
-        home_team_score:
-          type: integer
-          description: Home team final score
-          example: 98
-        away_team_score:
-          type: integer
-          description: Away team final score
-          example: 102
-      required: [ id, season_id, date, home_team_id, away_team_id ]
-
-    PlayerStats:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the statistics record
-          example: 1
-        match_id:
-          type: integer
-          description: ID of the match these stats belong to
-          example: 1
-        player_id:
-          type: integer
-          description: ID of the player these stats belong to
-          example: 1
-        team_id:
-          type: integer
-          description: ID of the team the player was on during this match
-          example: 1
-        stats:
-          type: object
-          description: Player statistics for the match
-          properties:
-            points:
-              type: integer
-              description: Points scored
-              example: 25
-            assists:
-              type: integer
-              description: Assists made
-              example: 7
-            rebounds:
-              type: integer
-              description: Rebounds grabbed
-              example: 10
-            steals:
-              type: integer
-              description: Steals made
-              example: 2
-            blocks:
-              type: integer
-              description: Blocks made
-              example: 1
-            minutes_played:
-              type: integer
-              description: Minutes played
-              example: 36
-            field_goals_made:
-              type: integer
-              description: Field goals made
-              example: 10
-            field_goals_attempted:
-              type: integer
-              description: Field goals attempted
-              example: 18
-            three_points_made:
-              type: integer
-              description: Three-pointers made
-              example: 3
-            three_points_attempted:
-              type: integer
-              description: Three-pointers attempted
-              example: 5
-            free_throws_made:
-              type: integer
-              description: Free throws made
-              example: 2
-            free_throws_attempted:
-              type: integer
-              description: Free throws attempted
-              example: 2
-            turnovers:
-              type: integer
-              description: Turnovers committed
-              example: 3
-            fouls:
-              type: integer
-              description: Fouls committed
-              example: 2
-      required: [ id, match_id, player_id, team_id, stats ]
-
-    TeamStats:
-      type: object
-      properties:
-        team_id:
-          type: integer
-          description: Unique identifier for the team
-          example: 1
-        team_name:
-          type: string
-          description: Team name
-          example: "Los Angeles Lakers"
-        average_points:
-          type: number
-          description: Average points per match
-          example: 102.5
-        win_rate:
-          type: number
-          description: Win rate percentage (0-1)
-          example: 0.75
-        total_wins:
-          type: integer
-          description: Total wins
-          example: 12
-        total_losses:
-          type: integer
-          description: Total losses
-          example: 4
-      required: [ team_id, team_name ]
-
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error message
-      required: [ error ]
+      Error:
+        type: object
+        properties:
+          error:
+            type: string
+            description: Error message
+        required: [ error ]

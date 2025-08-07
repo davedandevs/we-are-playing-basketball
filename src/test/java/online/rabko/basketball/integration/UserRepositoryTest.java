@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 import online.rabko.basketball.entity.User;
-import online.rabko.basketball.enums.Role;
 import online.rabko.basketball.repository.UserRepository;
+import online.rabko.model.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

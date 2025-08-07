@@ -23,16 +23,13 @@ public class AuthController implements AuthApi {
      * {@inheritDoc}
      */
     @Override
-    public ResponseEntity<JwtAuthenticationResponse> authSignInPost(SignInRequest signInRequest) {
-        return ResponseEntity.ok(authenticationService.signIn(signInRequest));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public ResponseEntity<JwtAuthenticationResponse> authSignUpPost(SignUpRequest signUpRequest) {
         return ResponseEntity.ok(authenticationService.signUp(signUpRequest));
+    }
+
+    @Override
+    public ResponseEntity<JwtAuthenticationResponse> authTokenPost(SignInRequest signInRequest) {
+        return ResponseEntity.ok(authenticationService.getToken(signInRequest));
     }
 }
 

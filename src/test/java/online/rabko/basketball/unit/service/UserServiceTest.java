@@ -9,9 +9,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import online.rabko.basketball.entity.User;
-import online.rabko.basketball.enums.Role;
 import online.rabko.basketball.repository.UserRepository;
 import online.rabko.basketball.service.UserService;
+import online.rabko.model.Role;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

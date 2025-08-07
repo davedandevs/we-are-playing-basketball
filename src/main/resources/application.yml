@@ -21,6 +21,7 @@ logging:
   level:
     root: info
     liquibase: debug
+    org.springframework.security: DEBUG
 
 springdoc:
   swagger-ui:
@@ -30,4 +31,4 @@ springdoc:
 
 token:
   signing:
-    key: ${JWT_SIGNING_KEY:DEFAULT_DEV_SIGNING_KEY_SHOULD_BE_OVERRIDDEN}
+    key: ${JWT_SIGNING_KEY:tXKjU8nJ7vWyQf9ZpTeR5mBL0hCuC23HZUTMZEMdYAw=}

@@ -61,13 +61,13 @@ class AuthControllerTest {
         SignInRequest request = new SignInRequest("testuser", "pass123");
         JwtAuthenticationResponse response = new JwtAuthenticationResponse("token-123");
 
-        when(authenticationService.signIn(any())).thenReturn(response);
+        when(authenticationService.getToken(any())).thenReturn(response);
 
         given()
             .contentType(ContentType.JSON)
             .body(objectMapper.writeValueAsString(request))
             .when()
-            .post("/auth/sign-in")
+            .post("/auth/token")
             .then()
             .statusCode(200)
             .body("token", equalTo("token-123"));

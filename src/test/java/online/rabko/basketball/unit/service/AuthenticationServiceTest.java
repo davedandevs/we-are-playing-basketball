@@ -10,12 +10,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import online.rabko.basketball.entity.User;
-import online.rabko.basketball.enums.Role;
 import online.rabko.basketball.exception.UserAlreadyExistsException;
 import online.rabko.basketball.service.AuthenticationService;
 import online.rabko.basketball.service.JwtService;
 import online.rabko.basketball.service.UserService;
 import online.rabko.model.JwtAuthenticationResponse;
+import online.rabko.model.Role;
 import online.rabko.model.SignInRequest;
 import online.rabko.model.SignUpRequest;
 import org.junit.jupiter.api.Test;
@@ -77,12 +77,12 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void signIn_shouldReturnJwtToken_whenCredentialsAreValid() {
+    void getToken_shouldReturnJwtToken_whenCredentialsAreValid() {
         SignInRequest request = new SignInRequest("testuser", "password");
         UserDetails userDetails = mock(UserDetails.class);
         when(userService.userDetailsService()).thenReturn(username -> userDetails);
         when(jwtService.generateToken(userDetails)).thenReturn("mockJwtToken");
-        JwtAuthenticationResponse response = authenticationService.signIn(request);
+        JwtAuthenticationResponse response = authenticationService.getToken(request);
         assertNotNull(response);
         assertEquals("mockJwtToken", response.getToken());
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
