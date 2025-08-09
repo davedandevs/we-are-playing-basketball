@@ -1,6 +1,7 @@
 plugins {
     java
     checkstyle
+    jacoco
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
     id("org.openapi.generator") version "7.12.0"
@@ -20,7 +21,6 @@ checkstyle {
     isShowViolations = false
 }
 
-
 repositories {
     mavenCentral()
 }
@@ -38,40 +38,50 @@ dependencies {
     implementation(group = "org.springframework.boot", name = "spring-boot-configuration-processor")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-oauth2-resource-server")
     implementation(group = "org.springframework.boot", name = "spring-boot-starter-jdbc")
+    implementation(group = "org.springframework.boot", name = "spring-boot-starter-data-jpa")
     developmentOnly(group = "org.springframework.boot", name = "spring-boot-devtools")
 
     // Swagger
     implementation(group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version = "2.6.0")
 
-    // Util
-    implementation(group = "org.apache.commons", name = "commons-csv", version = "1.14.0")
-    
     // Lombok
     compileOnly(group = "org.projectlombok", name = "lombok")
     annotationProcessor(group = "org.projectlombok", name = "lombok")
 
     // Test
     testImplementation(group = "org.springframework.boot", name = "spring-boot-starter-test")
+    testImplementation(group = "org.junit.jupiter", name = "junit-jupiter")
+    testImplementation(group = "org.mockito", name = "mockito-core")
+    testImplementation(group = "org.mockito", name = "mockito-junit-jupiter")
+    testImplementation(group = "org.testcontainers", name = "junit-jupiter")
+    testImplementation(group = "org.testcontainers", name = "postgresql")
+    testImplementation(group = "org.springframework.security", name = "spring-security-test")
+    testImplementation(group = "io.rest-assured", name = "spring-mock-mvc")
 
-    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+    // JWT
+    implementation(group = "io.jsonwebtoken", name = "jjwt-api", version = "0.11.5")
+    implementation(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.5")
+    implementation(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.5")
 
     // Database
-    runtimeOnly("org.postgresql:postgresql")
-    implementation("org.liquibase:liquibase-core")
+    runtimeOnly(group = "org.postgresql", name = "postgresql")
+    implementation(group = "org.liquibase", name = "liquibase-core")
 }
 
-tasks {
-    withType<Test> {
-        useJUnitPlatform()
-        systemProperty("spring.profiles.active", "test")
-    }
-    compileJava {
-        dependsOn(openApiGenerate)
-    }
-}
 
+val jacocoExcludedClasses = listOf(
+    "**/dto/**",
+    "**/entity/**",
+    "**/config/**",
+    "**/exception/**",
+    "**/enums/**",
+    "**/*Application*",
+    "**/api/**",
+    "**/model/**"
+)
 val oasResourcesDir = "$projectDir/src/main/resources/static/oas"
 val buildDir = layout.buildDirectory.get()
+
 openApiGenerate {
     generatorName.set("spring")
     inputSpec.set("$oasResourcesDir/basketball.yaml")
@@ -90,8 +100,57 @@ openApiGenerate {
     )
 }
 
- sourceSets {
-     main {
-         java.srcDir("$buildDir/generated/src/main/java")
-     }
- }
+sourceSets {
+    main {
+        java.srcDir("$buildDir/generated/src/main/java")
+    }
+}
+
+tasks {
+    withType<Test> {
+        useJUnitPlatform()
+        systemProperty("spring.profiles.active", "test")
+        finalizedBy("jacocoTestReport", "jacocoTestCoverageVerification")
+    }
+
+    compileJava {
+        dependsOn(openApiGenerate)
+    }
+
+    named<JacocoReport>("jacocoTestReport") {
+        dependsOn(test)
+
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+        }
+
+        val filteredClassDirs = files(classDirectories.files.map {
+            fileTree(it).exclude(jacocoExcludedClasses)
+        })
+        classDirectories.setFrom(filteredClassDirs)
+
+        doLast {
+            val report = reports.html.outputLocation.get().asFile.resolve("index.html")
+            println("Jacoco HTML report: file://${report.absolutePath}")
+        }
+    }
+
+    named<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
+        dependsOn(test)
+
+        val filteredClassDirs = files(classDirectories.files.map {
+            fileTree(it).exclude(jacocoExcludedClasses)
+        })
+        classDirectories.setFrom(filteredClassDirs)
+
+        violationRules {
+            rule {
+                limit {
+                    minimum = BigDecimal("0.80")
+                }
+            }
+            isFailOnViolation = true
+        }
+    }
+}

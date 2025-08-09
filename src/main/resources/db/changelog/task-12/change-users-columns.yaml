@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 12
+      author: PHYSI6
+      changes:
+        - sqlFile:
+            path: changes.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+      rollback:
+        - sqlFile:
+            path: rollback.sql
+            relativeToChangelogFile: true

@@ -21,9 +21,14 @@ logging:
   level:
     root: info
     liquibase: debug
+    org.springframework.security: DEBUG
 
 springdoc:
   swagger-ui:
     urls:
       - name: general
         url: /oas/basketball.yaml
+
+token:
+  signing:
+    key: ${JWT_SIGNING_KEY:tXKjU8nJ7vWyQf9ZpTeR5mBL0hCuC23HZUTMZEMdYAw=}

@@ -39,3 +39,4 @@ out/
 ### Secrets file ###
 application.secrets.yml
 client_secret.json
+.env

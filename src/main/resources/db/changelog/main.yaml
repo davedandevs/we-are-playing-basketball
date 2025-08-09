@@ -2,3 +2,6 @@ databaseChangeLog:
   - include:
       file: init/init.yaml
       relativeToChangelogFile: true
+  - include:
+      file: task-12/change-users-columns.yaml
+      relativeToChangelogFile: true
