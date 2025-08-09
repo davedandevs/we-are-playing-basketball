@@ -15,7 +15,7 @@ spring:
     change-log: classpath:db/changelog/main.yaml
 
 server:
-  port: 8080
+  port: 9080
 
 logging:
   level:
