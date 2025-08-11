@@ -1,93 +1,61 @@
-# We Are Playing Basketball
+# Basketball — Player & Game Tracking System
 
-## Approximate expected ERD
+A compact backend for tracking basketball **players**, **teams**, **seasons**, **matches**, and per-match **player stats**. Built to be boringly reliable on game day: fast local dev, reproducible environments, clean architecture.
 
-<div align="center">
-    <img src="readme-assets/approximate-erd.png" width="800" height="400" alt="Google console screenshot"/>
-</div>
+- **Live (prod):** https://basketball.rabko.online/
+- **Stack:** Java • Spring Boot • Gradle (Kotlin DSL) • PostgreSQL • JPA/Hibernate • Spring Security • JWT (JJWT) • Testcontainers • JUnit 5 / Mockito / RestAssuredMockMvc • JaCoCo
 
-## Approximate expected API
+---
 
-### Authentication
+## Overview
 
-| HTTP Method | URL          | Description                   | Required Role |
-|-------------|--------------|-------------------------------|---------------|
-| POST        | /auth/login  | User login, issues a token    | Any           |
-| POST        | /auth/logout | Logout, invalidates the token | Any           |
+The service exposes a secured REST API for managing basketball data and computing/serving statistics. It uses JWT-based authentication with role-aware access, persists to PostgreSQL, and ships as a standalone Spring Boot application that runs locally or in Docker.
 
-### Users
+---
 
-| HTTP Method | URL         | Description         | Required Role |
-|-------------|-------------|---------------------|---------------|
-| GET         | /users      | Get list of users   | ADMIN         |
-| GET         | /users/{id} | Get user info by ID | ADMIN         |
-| POST        | /users      | Create a user       | ADMIN         |
-| PUT         | /users/{id} | Update a user       | ADMIN         |
-| DELETE      | /users/{id} | Delete a user       | ADMIN         |
+## Architecture & Tech Stack
 
-### Players
+- **Language & Runtime:** Java 17+ (21 recommended)
+- **Frameworks:** Spring Boot (Web, Security, Validation), Spring Data JPA (Hibernate)
+- **Database:** PostgreSQL (JSONB used for flexible stat payloads)
+- **Auth:** JWT via JJWT (configurable expiration, issuer, secret)
+- **Build:** Gradle (Kotlin DSL), Spring Boot plugin → fat JAR
+- **Packaging & Ops:** Dockerfile for app image; Docker Compose for local Postgres
+- **Testing:**
+    - Unit & component tests with **JUnit 5**, **Mockito** (`@Mock`, `@InjectMocks`, `@ExtendWith(MockitoExtension.class)`)
+    - Controller/service tests via **RestAssuredMockMvc** (no full Spring context spin-up)
+    - Optional integration with **Testcontainers** (ephemeral Postgres)
+    - Coverage via **JaCoCo** (target ≥ 80%)
+- **Docs:** OpenAPI/Swagger (if enabled) at `/swagger-ui` and `/v3/api-docs`
 
-| HTTP Method | URL           | Description         | Required Role |
-|-------------|---------------|---------------------|---------------|
-| GET         | /players      | Get list of players | Any           |
-| GET         | /players/{id} | Get player info     | Any           |
-| POST        | /players      | Add a player        | ADMIN         |
-| PUT         | /players/{id} | Update player data  | ADMIN         |
-| DELETE      | /players/{id} | Delete a player     | ADMIN         |
+> Philosophy: keep it simple, minimize surprises, and make local dev a two-command story.
 
-### Teams
+---
 
-| HTTP Method | URL         | Description   | Required Role |
-|-------------|-------------|---------------|---------------|
-| GET         | /teams      | List of teams | Any           |
-| GET         | /teams/{id} | Team info     | Any           |
-| POST        | /teams      | Add a team    | ADMIN         |
-| PUT         | /teams/{id} | Update a team | ADMIN         |
-| DELETE      | /teams/{id} | Delete a team | ADMIN         |
+## Requirements
 
-### Seasons
+- **Java:** 17+ (21 recommended)
+- **Gradle:** wrapper included (`./gradlew` / `gradlew.bat`)
+- **Docker & Docker Compose:** for local PostgreSQL (or use your own Postgres 14+)
+- **PostgreSQL:** running instance reachable from the app
 
-| HTTP Method | URL           | Description     | Required Role |
-|-------------|---------------|-----------------|---------------|
-| GET         | /seasons      | List of seasons | Any           |
-| GET         | /seasons/{id} | Season info     | Any           |
-| POST        | /seasons      | Add a season    | ADMIN         |
-| PUT         | /seasons/{id} | Update a season | ADMIN         |
-| DELETE      | /seasons/{id} | Delete a season | ADMIN         |
+---
 
-### Matches
+## Quick Start (Local)
 
-| HTTP Method | URL           | Description                 | Required Role |
-|-------------|---------------|-----------------------------|---------------|
-| GET         | /matches      | List of all matches         | Any           |
-| GET         | /matches/{id} | Info about a specific match | Any           |
-| POST        | /matches      | Create a match              | ADMIN         |
-| PUT         | /matches/{id} | Update a match              | ADMIN         |
-| DELETE      | /matches/{id} | Delete a match              | ADMIN         |
+```bash
+# 1) Clone
+git clone https://github.com/davedandevs/basketball.git
+cd basketball
+git checkout main
 
-### Stats
+# 2) Start Postgres (Docker)
+docker compose up -d
 
-| HTTP Method | URL                           | Description              | Required Role |
-|-------------|-------------------------------|--------------------------|---------------|
-| GET         | /matches/{matchId}/statistics | Player stats for a match | Any           |
-| GET         | /statistics/{id}              | Get stats by ID          | Any           |
-| POST        | /matches/{matchId}/statistics | Add/update player stats  | ADMIN         |
-| DELETE      | /statistics/{id}              | Delete a stats record    | ADMIN         |
-
-### Stats by team / player / match
-
-| HTTP Method | URL                              | Description                                                                  | Required Role |
-|-------------|----------------------------------|------------------------------------------------------------------------------|---------------|
-| GET         | /stats/players/top-scorers       | Get list of players with the highest number of points in a season / all time | Any           |
-| GET         | /stats/players/top-assisters     | Get list of players with the highest number of assists                       | Any           |
-| GET         | /stats/players/top-rebounders    | Get list of top rebounders                                                   | Any           |
-| GET         | /stats/players/top-stealers      | Get list of players with the highest number of steals                        | Any           |
-| GET         | /stats/players/top-blockers      | Get list of top shot blockers                                                | Any           |
-| GET         | /stats/players/efficiency-rating | Get player efficiency rating (based on aggregate stats)                      | Any           |
-| GET         | /stats/players/minutes-played    | Get list of players by total minutes played                                  | Any           |
-| GET         | /stats/teams/average-points      | Get average number of points scored by teams per match                       | Any           |
-| GET         | /stats/teams/win-rate            | Get win percentage by teams                                                  | Any           |
-| GET         | /stats/matches/highest-scoring   | Get list of matches with the highest total points scored                     | Any           |
+# 3) Configure environment (see section below), then:
+./gradlew clean build
+./gradlew bootRun
+```
 
 ## Contributing
 
