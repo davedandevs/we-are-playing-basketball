@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       file: task-12/change-users-columns.yaml
       relativeToChangelogFile: true
+  - include:
+      file: task-16/change-relations.yaml
+      relativeToChangelogFile: true

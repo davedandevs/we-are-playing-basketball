@@ -66,6 +66,8 @@ dependencies {
     // Database
     runtimeOnly(group = "org.postgresql", name = "postgresql")
     implementation(group = "org.liquibase", name = "liquibase-core")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-rest:3.5.0")
 }
 
 

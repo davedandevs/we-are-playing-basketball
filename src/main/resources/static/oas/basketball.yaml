@@ -82,6 +82,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the user to retrieve
       responses:
         '200':
@@ -113,6 +114,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the user to update
       requestBody:
         required: true
@@ -155,6 +157,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the user to delete
       responses:
         '204':
@@ -231,6 +234,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the player to retrieve
       responses:
         '200':
@@ -262,6 +266,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the player to update
       requestBody:
         required: true
@@ -304,6 +309,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the player to delete
       responses:
         '204':
@@ -386,6 +392,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the team to retrieve
       responses:
         '200':
@@ -417,6 +424,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the team to update
       requestBody:
         required: true
@@ -465,6 +473,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the team to delete
       responses:
         '204':
@@ -553,6 +562,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the season to retrieve
       responses:
         '200':
@@ -584,6 +594,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the season to update
       requestBody:
         required: true
@@ -632,6 +643,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the season to delete
       responses:
         '204':
@@ -726,6 +738,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the match to retrieve
       responses:
         '200':
@@ -757,6 +770,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the match to update
       requestBody:
         required: true
@@ -805,6 +819,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the match to delete
       responses:
         '204':
@@ -832,6 +847,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the match to get statistics for
       responses:
         '200':
@@ -864,6 +880,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the match to add statistics for
       requestBody:
         required: true
@@ -907,6 +924,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the player statistics record to retrieve
       responses:
         '200':
@@ -937,6 +955,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
             description: ID of the player statistics record to delete
       responses:
         '204':
@@ -963,6 +982,7 @@ paths:
           required: false
           schema:
             type: integer
+            format: int64
             description: Filter by season ID
       responses:
         '200':
@@ -990,6 +1010,7 @@ paths:
           required: false
           schema:
             type: integer
+            format: int64
             description: Filter by season ID
       responses:
         '200':
@@ -1017,6 +1038,7 @@ paths:
           required: false
           schema:
             type: integer
+            format: int64
             description: Filter by season ID
       responses:
         '200':
@@ -1044,6 +1066,7 @@ paths:
           required: false
           schema:
             type: integer
+            format: int64
             description: Filter by season ID
       responses:
         '200':
@@ -1071,6 +1094,7 @@ paths:
           required: false
           schema:
             type: integer
+            format: int64
             description: Filter by season ID
       responses:
         '200':
@@ -1098,6 +1122,7 @@ paths:
           required: false
           schema:
             type: integer
+            format: int64
             description: Filter by season ID
       responses:
         '200':
@@ -1125,6 +1150,7 @@ paths:
           required: false
           schema:
             type: integer
+            format: int64
             description: Filter by season ID
       responses:
         '200':
@@ -1152,6 +1178,7 @@ paths:
           required: false
           schema:
             type: integer
+            format: int64
             description: Filter by season ID
       responses:
         '200':
@@ -1179,6 +1206,7 @@ paths:
           required: false
           schema:
             type: integer
+            format: int64
             description: Filter by season ID
       responses:
         '200':
@@ -1206,6 +1234,7 @@ paths:
           required: false
           schema:
             type: integer
+            format: int64
             description: Filter by season ID
       responses:
         '200':
@@ -1279,6 +1308,7 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Unique identifier for the user
           example: 1
         username:
@@ -1306,10 +1336,12 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Unique identifier for the player
           example: 1
         team_id:
           type: integer
+          format: int64
           description: ID of the team the player belongs to
           example: 5
         first_name:
@@ -1343,6 +1375,7 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Unique identifier for the team
           example: 1
         name:
@@ -1356,6 +1389,7 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Unique identifier for the season
           example: 1
         name:
@@ -1379,10 +1413,12 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Unique identifier for the match
           example: 1
         season_id:
           type: integer
+          format: int64
           description: ID of the season the match belongs to
           example: 1
         date:
@@ -1392,10 +1428,12 @@ components:
           example: "2023-11-15"
         home_team_id:
           type: integer
+          format: int64
           description: ID of the home team
           example: 1
         away_team_id:
           type: integer
+          format: int64
           description: ID of the away team
           example: 2
         home_team_score:
@@ -1413,18 +1451,22 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Unique identifier for the statistics record
           example: 1
         match_id:
           type: integer
+          format: int64
           description: ID of the match these stats belong to
           example: 1
         player_id:
           type: integer
+          format: int64
           description: ID of the player these stats belong to
           example: 1
         team_id:
           type: integer
+          format: int64
           description: ID of the team the player was on during this match
           example: 1
         stats:
@@ -1494,6 +1536,7 @@ components:
       properties:
         team_id:
           type: integer
+          format: int64
           description: Unique identifier for the team
           example: 1
         team_name:

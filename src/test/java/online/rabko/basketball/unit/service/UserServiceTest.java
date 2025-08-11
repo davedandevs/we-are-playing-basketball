@@ -34,7 +34,12 @@ class UserServiceTest {
 
     @Test
     void save_shouldPersistUser() {
-        User user = new User(1L, "john", "pwd", Role.USER);
+        User user = User.builder()
+            .id(1L)
+            .username("john")
+            .password("pwd")
+            .role(Role.USER)
+            .build();
         when(userRepository.save(user)).thenReturn(user);
 
         User result = userService.save(user);
@@ -45,8 +50,13 @@ class UserServiceTest {
 
     @Test
     void create_shouldReturnUser_whenUsernameNotExists() {
-        User user = new User(1L, "newuser", "pwd", Role.USER);
-        when(userRepository.existsByUsername("newuser")).thenReturn(false);
+        User user = User.builder()
+            .id(1L)
+            .username("john")
+            .password("pwd")
+            .role(Role.USER)
+            .build();
+        when(userRepository.existsByUsername("john")).thenReturn(false);
         when(userRepository.save(user)).thenReturn(user);
 
         User result = userService.create(user);
@@ -57,8 +67,13 @@ class UserServiceTest {
 
     @Test
     void create_shouldThrowException_whenUsernameAlreadyExists() {
-        User user = new User(1L, "taken", "pwd", Role.USER);
-        when(userRepository.existsByUsername("taken")).thenReturn(true);
+        User user = User.builder()
+            .id(1L)
+            .username("john")
+            .password("pwd")
+            .role(Role.USER)
+            .build();
+        when(userRepository.existsByUsername("john")).thenReturn(true);
 
         RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.create(user));
         assertEquals("User with this username already exists", ex.getMessage());
@@ -66,7 +81,12 @@ class UserServiceTest {
 
     @Test
     void getByUsername_shouldReturnUser_whenUserExists() {
-        User user = new User(1L, "john", "pwd", Role.USER);
+        User user = User.builder()
+            .id(1L)
+            .username("john")
+            .password("pwd")
+            .role(Role.USER)
+            .build();
         when(userRepository.findByUsername("john")).thenReturn(Optional.of(user));
 
         User result = userService.getByUsername("john");
@@ -83,7 +103,12 @@ class UserServiceTest {
 
     @Test
     void userDetailsService_shouldReturnUserDetails_whenUserExists() {
-        User user = new User(1L, "john", "pwd", Role.USER);
+        User user = User.builder()
+            .id(1L)
+            .username("john")
+            .password("pwd")
+            .role(Role.USER)
+            .build();
         when(userRepository.findByUsername("john")).thenReturn(Optional.of(user));
 
         UserDetails details = userService.userDetailsService().loadUserByUsername("john");
