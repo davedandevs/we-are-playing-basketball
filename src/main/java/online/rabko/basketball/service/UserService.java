@@ -3,30 +3,21 @@ package online.rabko.basketball.service;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import online.rabko.basketball.entity.User;
-import online.rabko.basketball.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
 /**
- * Service for the {@link User} entity.
+ * Service interface for managing {@link User} entities.
  */
-@Service
-@RequiredArgsConstructor
-public class UserService {
-
-    private final UserRepository repository;
+public interface UserService {
 
     /**
      * Retrieves all users.
      *
      * @return list of users.
      */
-    public List<User> findAll() {
-        return repository.findAll();
-    }
+    List<User> findAll();
 
     /**
      * Retrieves a user by ID.
@@ -35,10 +26,7 @@ public class UserService {
      * @return found user.
      * @throws EntityNotFoundException if not found.
      */
-    public User findById(Long id) {
-        return repository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("User not found: " + id));
-    }
+    User findById(Long id);
 
     /**
      * Saves a user.
@@ -46,9 +34,7 @@ public class UserService {
      * @param user user entity.
      * @return saved user.
      */
-    public User save(User user) {
-        return repository.save(user);
-    }
+    User save(User user);
 
     /**
      * Creates a new user.
@@ -57,12 +43,7 @@ public class UserService {
      * @return created user.
      * @throws EntityExistsException if username already exists.
      */
-    public User create(User user) {
-        if (repository.existsByUsername(user.getUsername())) {
-            throw new EntityExistsException("User with this username already exists");
-        }
-        return save(user);
-    }
+    User create(User user);
 
     /**
      * Updates an existing user.
@@ -73,15 +54,7 @@ public class UserService {
      * @throws EntityNotFoundException if not found.
      * @throws EntityExistsException   if username already exists.
      */
-    public User update(Long id, User replacement) {
-        User existing = findById(id);
-        if (!existing.getUsername().equals(replacement.getUsername())
-            && repository.existsByUsername(replacement.getUsername())) {
-            throw new EntityExistsException("User with this username already exists");
-        }
-        replacement.setId(id);
-        return repository.save(replacement);
-    }
+    User update(Long id, User replacement);
 
     /**
      * Deletes a user by ID.
@@ -89,12 +62,7 @@ public class UserService {
      * @param id user ID.
      * @throws EntityNotFoundException if not found.
      */
-    public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new EntityNotFoundException("User not found: " + id);
-        }
-        repository.deleteById(id);
-    }
+    void delete(Long id);
 
     /**
      * Retrieves a user by username.
@@ -103,19 +71,14 @@ public class UserService {
      * @return found user.
      * @throws UsernameNotFoundException if not found.
      */
-    public User getByUsername(String username) {
-        return repository.findByUsername(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
+    User getByUsername(String username);
 
     /**
      * Returns UserDetailsService backed by this service.
      *
      * @return UserDetailsService.
      */
-    public UserDetailsService userDetailsService() {
-        return this::getByUsername;
-    }
+    UserDetailsService userDetailsService();
 
     /**
      * Checks if username exists.
@@ -123,7 +86,5 @@ public class UserService {
      * @param username username.
      * @return true if exists, false otherwise.
      */
-    public boolean existsByUsername(String username) {
-        return repository.existsByUsername(username);
-    }
+    boolean existsByUsername(String username);
 }

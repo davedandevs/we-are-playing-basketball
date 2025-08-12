@@ -13,8 +13,8 @@ import online.rabko.basketball.controller.converter.MatchConverter;
 import online.rabko.basketball.entity.Match;
 import online.rabko.basketball.entity.Season;
 import online.rabko.basketball.entity.Team;
-import online.rabko.basketball.service.SeasonService;
-import online.rabko.basketball.service.TeamService;
+import online.rabko.basketball.service.impl.SeasonServiceImpl;
+import online.rabko.basketball.service.impl.TeamServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,10 +29,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class MatchConverterTest {
 
     @Mock
-    private SeasonService seasonService;
+    private SeasonServiceImpl seasonServiceImpl;
 
     @Mock
-    private TeamService teamService;
+    private TeamServiceImpl teamServiceImpl;
 
     @InjectMocks
     private MatchConverter converter;
@@ -108,9 +108,9 @@ class MatchConverterTest {
             .homeTeamScore(70)
             .awayTeamScore(71);
 
-        when(seasonService.findById(1L)).thenReturn(season);
-        when(teamService.findById(10L)).thenReturn(home);
-        when(teamService.findById(20L)).thenReturn(away);
+        when(seasonServiceImpl.findById(1L)).thenReturn(season);
+        when(teamServiceImpl.findById(10L)).thenReturn(home);
+        when(teamServiceImpl.findById(20L)).thenReturn(away);
 
         Match entity = converter.convertBack(dto);
 
@@ -125,9 +125,9 @@ class MatchConverterTest {
         assertNotNull(entity.getAwayTeam());
         assertEquals(20L, entity.getAwayTeam().getId());
 
-        verify(seasonService).findById(eq(1L));
-        verify(teamService).findById(eq(10L));
-        verify(teamService).findById(eq(20L));
+        verify(seasonServiceImpl).findById(eq(1L));
+        verify(teamServiceImpl).findById(eq(10L));
+        verify(teamServiceImpl).findById(eq(20L));
     }
 
     @Test
@@ -147,7 +147,7 @@ class MatchConverterTest {
         assertNull(entity.getHomeTeam());
         assertNull(entity.getAwayTeam());
 
-        verifyNoInteractions(seasonService);
-        verifyNoInteractions(teamService);
+        verifyNoInteractions(seasonServiceImpl);
+        verifyNoInteractions(teamServiceImpl);
     }
 }

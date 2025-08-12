@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import online.rabko.api.SeasonsApi;
 import online.rabko.basketball.controller.converter.SeasonConverter;
 import online.rabko.basketball.entity.Season;
-import online.rabko.basketball.service.SeasonService;
+import online.rabko.basketball.service.impl.SeasonServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SeasonsController implements SeasonsApi {
 
-    private final SeasonService seasonService;
+    private final SeasonServiceImpl seasonServiceImpl;
     private final SeasonConverter seasonConverter;
 
     /**
@@ -27,7 +27,7 @@ public class SeasonsController implements SeasonsApi {
      */
     @Override
     public ResponseEntity<List<online.rabko.model.Season>> seasonsGet() {
-        List<Season> seasons = seasonService.findAll();
+        List<Season> seasons = seasonServiceImpl.findAll();
         return ResponseEntity.ok(
             seasons.stream()
                 .map(seasonConverter::convert)
@@ -40,7 +40,7 @@ public class SeasonsController implements SeasonsApi {
      */
     @Override
     public ResponseEntity<online.rabko.model.Season> seasonsIdGet(Long id) {
-        Season season = seasonService.findById(id);
+        Season season = seasonServiceImpl.findById(id);
         return ResponseEntity.ok(seasonConverter.convert(season));
     }
 
@@ -50,7 +50,7 @@ public class SeasonsController implements SeasonsApi {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> seasonsIdDelete(Long id) {
-        seasonService.delete(id);
+        seasonServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -66,7 +66,7 @@ public class SeasonsController implements SeasonsApi {
         seasonDto.setId(null);
         Season replacement = seasonConverter.convertBack(seasonDto);
         replacement.setId(id);
-        Season updated = seasonService.update(id, replacement);
+        Season updated = seasonServiceImpl.update(id, replacement);
         return ResponseEntity.ok(seasonConverter.convert(updated));
     }
 
@@ -79,7 +79,7 @@ public class SeasonsController implements SeasonsApi {
         online.rabko.model.Season seasonDto) {
         seasonDto.setId(null);
         Season toCreate = seasonConverter.convertBack(seasonDto);
-        Season created = seasonService.create(toCreate);
+        Season created = seasonServiceImpl.create(toCreate);
         return ResponseEntity.status(CREATED).body(seasonConverter.convert(created));
     }
 }

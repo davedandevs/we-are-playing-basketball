@@ -18,7 +18,7 @@ import java.util.List;
 import online.rabko.basketball.controller.SeasonsController;
 import online.rabko.basketball.controller.converter.SeasonConverter;
 import online.rabko.basketball.entity.Season;
-import online.rabko.basketball.service.SeasonService;
+import online.rabko.basketball.service.impl.SeasonServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +35,7 @@ import org.springframework.web.server.ResponseStatusException;
 class SeasonsControllerTest {
 
     @Mock
-    private SeasonService seasonService;
+    private SeasonServiceImpl seasonServiceImpl;
 
     @Mock
     private SeasonConverter seasonConverter;
@@ -52,7 +52,7 @@ class SeasonsControllerTest {
     void seasonsGet_shouldReturnList() {
         Season s1 = Season.builder().id(1L).build();
         Season s2 = Season.builder().id(2L).build();
-        when(seasonService.findAll()).thenReturn(List.of(s1, s2));
+        when(seasonServiceImpl.findAll()).thenReturn(List.of(s1, s2));
         when(seasonConverter.convert(s1)).thenReturn(new online.rabko.model.Season());
         when(seasonConverter.convert(s2)).thenReturn(new online.rabko.model.Season());
 
@@ -63,7 +63,7 @@ class SeasonsControllerTest {
             .statusCode(200)
             .body("$", hasSize(2));
 
-        verify(seasonService).findAll();
+        verify(seasonServiceImpl).findAll();
         verify(seasonConverter, times(2)).convert(any(Season.class));
     }
 
@@ -71,7 +71,7 @@ class SeasonsControllerTest {
     void seasonsIdGet_shouldReturnSeason() {
         Long id = 42L;
         Season entity = Season.builder().id(id).build();
-        when(seasonService.findById(id)).thenReturn(entity);
+        when(seasonServiceImpl.findById(id)).thenReturn(entity);
         when(seasonConverter.convert(entity)).thenReturn(new online.rabko.model.Season());
 
         given()
@@ -81,7 +81,7 @@ class SeasonsControllerTest {
             .statusCode(200)
             .body("$", notNullValue());
 
-        verify(seasonService).findById(id);
+        verify(seasonServiceImpl).findById(id);
         verify(seasonConverter).convert(entity);
     }
 
@@ -91,7 +91,7 @@ class SeasonsControllerTest {
         Season created = Season.builder().id(10L).build();
         when(seasonConverter.convertBack(any(online.rabko.model.Season.class))).thenReturn(
             toCreate);
-        when(seasonService.create(toCreate)).thenReturn(created);
+        when(seasonServiceImpl.create(toCreate)).thenReturn(created);
         when(seasonConverter.convert(created)).thenReturn(new online.rabko.model.Season());
 
         given()
@@ -104,7 +104,7 @@ class SeasonsControllerTest {
             .body("$", notNullValue());
 
         verify(seasonConverter).convertBack(any(online.rabko.model.Season.class));
-        verify(seasonService).create(toCreate);
+        verify(seasonServiceImpl).create(toCreate);
         verify(seasonConverter).convert(created);
     }
 
@@ -115,7 +115,7 @@ class SeasonsControllerTest {
         Season updated = Season.builder().id(id).build();
         when(seasonConverter.convertBack(any(online.rabko.model.Season.class))).thenReturn(
             replacement);
-        when(seasonService.update(eq(id), eq(replacement))).thenReturn(updated);
+        when(seasonServiceImpl.update(eq(id), eq(replacement))).thenReturn(updated);
         when(seasonConverter.convert(updated)).thenReturn(new online.rabko.model.Season());
 
         given()
@@ -128,14 +128,14 @@ class SeasonsControllerTest {
             .body("$", notNullValue());
 
         verify(seasonConverter).convertBack(any(online.rabko.model.Season.class));
-        verify(seasonService).update(id, replacement);
+        verify(seasonServiceImpl).update(id, replacement);
         verify(seasonConverter).convert(updated);
     }
 
     @Test
     void seasonsIdDelete_shouldDeleteSeason() {
         Long id = 9L;
-        doNothing().when(seasonService).delete(id);
+        doNothing().when(seasonServiceImpl).delete(id);
 
         given()
             .when()
@@ -143,14 +143,14 @@ class SeasonsControllerTest {
             .then()
             .statusCode(204);
 
-        verify(seasonService).delete(id);
+        verify(seasonServiceImpl).delete(id);
         verifyNoInteractions(seasonConverter);
     }
 
     @Test
     void seasonsIdGet_shouldReturnNotFound() {
         Long id = 404L;
-        when(seasonService.findById(id)).thenThrow(
+        when(seasonServiceImpl.findById(id)).thenThrow(
             new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         given()
@@ -163,7 +163,8 @@ class SeasonsControllerTest {
     @Test
     void seasonsIdDelete_shouldReturnNotFound() {
         Long id = 404L;
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(seasonService).delete(id);
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(seasonServiceImpl)
+            .delete(id);
 
         given()
             .when()

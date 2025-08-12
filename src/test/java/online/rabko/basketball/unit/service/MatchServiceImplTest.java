@@ -21,6 +21,7 @@ import online.rabko.basketball.repository.MatchRepository;
 import online.rabko.basketball.repository.SeasonRepository;
 import online.rabko.basketball.repository.TeamRepository;
 import online.rabko.basketball.service.MatchService;
+import online.rabko.basketball.service.impl.MatchServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -29,10 +30,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * Unit tests for {@link MatchService}.
+ * Unit tests for {@link MatchServiceImpl}.
  */
 @ExtendWith(MockitoExtension.class)
-class MatchServiceTest {
+class MatchServiceImplTest {
 
     @Mock
     private MatchRepository matchRepository;
@@ -44,7 +45,7 @@ class MatchServiceTest {
     private TeamRepository teamRepository;
 
     @InjectMocks
-    private MatchService matchService;
+    private MatchServiceImpl matchService;
 
     @Test
     void findAll_shouldReturnList() {

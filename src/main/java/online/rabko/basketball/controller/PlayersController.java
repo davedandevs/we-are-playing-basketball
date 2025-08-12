@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import online.rabko.api.PlayersApi;
 import online.rabko.basketball.controller.converter.PlayerConverter;
-import online.rabko.basketball.service.PlayerService;
-import online.rabko.basketball.service.TeamService;
+import online.rabko.basketball.service.impl.PlayerServiceImpl;
+import online.rabko.basketball.service.impl.TeamServiceImpl;
 import online.rabko.model.Player;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PlayersController implements PlayersApi {
 
-    private final PlayerService playerService;
-    private final TeamService teamService;
+    private final PlayerServiceImpl playerServiceImpl;
+    private final TeamServiceImpl teamServiceImpl;
     private final PlayerConverter playerConverter;
 
     /**
@@ -31,7 +31,7 @@ public class PlayersController implements PlayersApi {
      */
     @Override
     public ResponseEntity<List<Player>> playersGet() {
-        List<Player> body = playerService.findAll()
+        List<Player> body = playerServiceImpl.findAll()
             .stream()
             .map(playerConverter::convert)
             .collect(Collectors.toList());
@@ -43,7 +43,7 @@ public class PlayersController implements PlayersApi {
      */
     @Override
     public ResponseEntity<Player> playersIdGet(Long id) {
-        online.rabko.basketball.entity.Player entity = playerService.findById(id);
+        online.rabko.basketball.entity.Player entity = playerServiceImpl.findById(id);
         return ResponseEntity.ok(playerConverter.convert(entity));
     }
 
@@ -56,9 +56,9 @@ public class PlayersController implements PlayersApi {
         dto.setId(null);
         online.rabko.basketball.entity.Player entity = playerConverter.convertBack(dto);
         if (Objects.nonNull(dto.getTeamId())) {
-            entity.setTeam(teamService.findById(dto.getTeamId()));
+            entity.setTeam(teamServiceImpl.findById(dto.getTeamId()));
         }
-        online.rabko.basketball.entity.Player created = playerService.create(entity);
+        online.rabko.basketball.entity.Player created = playerServiceImpl.create(entity);
         return ResponseEntity.status(CREATED).body(playerConverter.convert(created));
     }
 
@@ -72,11 +72,11 @@ public class PlayersController implements PlayersApi {
         online.rabko.basketball.entity.Player entity = playerConverter.convertBack(dto);
         entity.setId(id);
         if (Objects.nonNull(dto.getTeamId())) {
-            entity.setTeam(teamService.findById(dto.getTeamId()));
+            entity.setTeam(teamServiceImpl.findById(dto.getTeamId()));
         } else {
             entity.setTeam(null);
         }
-        online.rabko.basketball.entity.Player updated = playerService.update(id, entity);
+        online.rabko.basketball.entity.Player updated = playerServiceImpl.update(id, entity);
         return ResponseEntity.ok(playerConverter.convert(updated));
     }
 
@@ -86,7 +86,7 @@ public class PlayersController implements PlayersApi {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> playersIdDelete(Long id) {
-        playerService.delete(id);
+        playerServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

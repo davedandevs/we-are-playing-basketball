@@ -2,7 +2,7 @@ package online.rabko.basketball.controller;
 
 import lombok.RequiredArgsConstructor;
 import online.rabko.api.AuthApi;
-import online.rabko.basketball.service.AuthenticationService;
+import online.rabko.basketball.security.AuthenticationService;
 import online.rabko.model.JwtAuthenticationResponse;
 import online.rabko.model.SignInRequest;
 import online.rabko.model.SignUpRequest;

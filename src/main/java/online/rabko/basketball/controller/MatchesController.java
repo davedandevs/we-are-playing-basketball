@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import online.rabko.api.MatchesApi;
 import online.rabko.basketball.controller.converter.MatchConverter;
 import online.rabko.basketball.entity.Match;
-import online.rabko.basketball.service.MatchService;
+import online.rabko.basketball.service.impl.MatchServiceImpl;
 import online.rabko.model.PlayerStats;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MatchesController implements MatchesApi {
 
-    private final MatchService matchService;
+    private final MatchServiceImpl matchServiceImpl;
     private final MatchConverter matchConverter;
 
     /**
@@ -29,7 +29,7 @@ public class MatchesController implements MatchesApi {
     @Override
     public ResponseEntity<List<online.rabko.model.Match>> matchesGet() {
         return ResponseEntity.ok(
-            matchService.findAll().stream()
+            matchServiceImpl.findAll().stream()
                 .map(matchConverter::convert)
                 .toList()
         );
@@ -41,7 +41,7 @@ public class MatchesController implements MatchesApi {
     @Override
     public ResponseEntity<online.rabko.model.Match> matchesIdGet(Long id) {
         return ResponseEntity.ok(
-            matchConverter.convert(matchService.findById(id))
+            matchConverter.convert(matchServiceImpl.findById(id))
         );
     }
 
@@ -51,7 +51,7 @@ public class MatchesController implements MatchesApi {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> matchesIdDelete(Long id) {
-        matchService.delete(id);
+        matchServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -61,7 +61,7 @@ public class MatchesController implements MatchesApi {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<online.rabko.model.Match> matchesPost(online.rabko.model.Match dto) {
-        Match created = matchService.create(matchConverter.convertBack(dto));
+        Match created = matchServiceImpl.create(matchConverter.convertBack(dto));
         return ResponseEntity.status(CREATED).body(matchConverter.convert(created));
 
     }
@@ -73,7 +73,7 @@ public class MatchesController implements MatchesApi {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<online.rabko.model.Match> matchesIdPut(Long id,
         online.rabko.model.Match dto) {
-        Match updated = matchService.update(id, matchConverter.convertBack(dto));
+        Match updated = matchServiceImpl.update(id, matchConverter.convertBack(dto));
         return ResponseEntity.ok(matchConverter.convert(updated));
     }
 

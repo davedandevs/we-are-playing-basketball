@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import online.rabko.api.UsersApi;
 import online.rabko.basketball.controller.converter.UserConverter;
-import online.rabko.basketball.service.UserService;
+import online.rabko.basketball.service.impl.UserServiceImpl;
 import online.rabko.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UsersController implements UsersApi {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final UserConverter converter;
 
     /**
@@ -26,7 +26,7 @@ public class UsersController implements UsersApi {
     @Override
     public ResponseEntity<List<User>> usersGet() {
         return ResponseEntity.ok(
-            userService.findAll().stream()
+            userServiceImpl.findAll().stream()
                 .map(converter::convert)
                 .toList()
         );
@@ -37,7 +37,7 @@ public class UsersController implements UsersApi {
      */
     @Override
     public ResponseEntity<User> usersIdGet(Long id) {
-        return ResponseEntity.ok(converter.convert(userService.findById(id)));
+        return ResponseEntity.ok(converter.convert(userServiceImpl.findById(id)));
 
     }
 
@@ -50,7 +50,7 @@ public class UsersController implements UsersApi {
         dto.setId(null);
         online.rabko.basketball.entity.User toUpdate = converter.convertBack(dto);
         toUpdate.setId(id);
-        online.rabko.basketball.entity.User updated = userService.update(id, toUpdate);
+        online.rabko.basketball.entity.User updated = userServiceImpl.update(id, toUpdate);
         return ResponseEntity.ok(converter.convert(updated));
     }
 
@@ -60,7 +60,7 @@ public class UsersController implements UsersApi {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> usersIdDelete(Long id) {
-        userService.delete(id);
+        userServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -19,8 +19,8 @@ import online.rabko.basketball.controller.PlayersController;
 import online.rabko.basketball.controller.converter.PlayerConverter;
 import online.rabko.basketball.entity.Player;
 import online.rabko.basketball.entity.Team;
-import online.rabko.basketball.service.PlayerService;
-import online.rabko.basketball.service.TeamService;
+import online.rabko.basketball.service.impl.PlayerServiceImpl;
+import online.rabko.basketball.service.impl.TeamServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,10 +37,10 @@ import org.springframework.web.server.ResponseStatusException;
 class PlayersControllerTest {
 
     @Mock
-    private PlayerService playerService;
+    private PlayerServiceImpl playerServiceImpl;
 
     @Mock
-    private TeamService teamService;
+    private TeamServiceImpl teamServiceImpl;
 
     @Mock
     private PlayerConverter playerConverter;
@@ -57,7 +57,7 @@ class PlayersControllerTest {
     void playersGet_shouldReturnList() {
         Player p1 = Player.builder().id(1L).build();
         Player p2 = Player.builder().id(2L).build();
-        when(playerService.findAll()).thenReturn(List.of(p1, p2));
+        when(playerServiceImpl.findAll()).thenReturn(List.of(p1, p2));
         when(playerConverter.convert(p1)).thenReturn(new online.rabko.model.Player());
         when(playerConverter.convert(p2)).thenReturn(new online.rabko.model.Player());
 
@@ -68,7 +68,7 @@ class PlayersControllerTest {
             .statusCode(200)
             .body("$", hasSize(2));
 
-        verify(playerService).findAll();
+        verify(playerServiceImpl).findAll();
         verify(playerConverter, times(2)).convert(any(Player.class));
     }
 
@@ -76,7 +76,7 @@ class PlayersControllerTest {
     void playersIdGet_shouldReturnPlayer() {
         Long id = 42L;
         Player entity = Player.builder().id(id).build();
-        when(playerService.findById(id)).thenReturn(entity);
+        when(playerServiceImpl.findById(id)).thenReturn(entity);
         when(playerConverter.convert(entity)).thenReturn(new online.rabko.model.Player());
 
         given()
@@ -86,7 +86,7 @@ class PlayersControllerTest {
             .statusCode(200)
             .body("$", notNullValue());
 
-        verify(playerService).findById(id);
+        verify(playerServiceImpl).findById(id);
         verify(playerConverter).convert(entity);
     }
 
@@ -96,7 +96,7 @@ class PlayersControllerTest {
         Player created = Player.builder().id(10L).build();
         when(playerConverter.convertBack(any(online.rabko.model.Player.class))).thenReturn(
             toCreate);
-        when(playerService.create(toCreate)).thenReturn(created);
+        when(playerServiceImpl.create(toCreate)).thenReturn(created);
         when(playerConverter.convert(created)).thenReturn(new online.rabko.model.Player());
 
         given()
@@ -108,9 +108,9 @@ class PlayersControllerTest {
             .statusCode(201)
             .body("$", notNullValue());
 
-        verifyNoInteractions(teamService);
+        verifyNoInteractions(teamServiceImpl);
         verify(playerConverter).convertBack(any(online.rabko.model.Player.class));
-        verify(playerService).create(toCreate);
+        verify(playerServiceImpl).create(toCreate);
         verify(playerConverter).convert(created);
     }
 
@@ -123,8 +123,8 @@ class PlayersControllerTest {
 
         when(playerConverter.convertBack(any(online.rabko.model.Player.class))).thenReturn(
             toCreate);
-        when(teamService.findById(teamId)).thenReturn(team);
-        when(playerService.create(any(Player.class))).thenReturn(created);
+        when(teamServiceImpl.findById(teamId)).thenReturn(team);
+        when(playerServiceImpl.create(any(Player.class))).thenReturn(created);
         when(playerConverter.convert(created)).thenReturn(new online.rabko.model.Player());
 
         online.rabko.model.Player dto = new online.rabko.model.Player();
@@ -139,8 +139,8 @@ class PlayersControllerTest {
             .statusCode(201)
             .body("$", notNullValue());
 
-        verify(teamService).findById(eq(teamId));
-        verify(playerService).create(any(Player.class));
+        verify(teamServiceImpl).findById(eq(teamId));
+        verify(playerServiceImpl).create(any(Player.class));
         verify(playerConverter).convert(created);
     }
 
@@ -156,8 +156,8 @@ class PlayersControllerTest {
 
         when(playerConverter.convertBack(any(online.rabko.model.Player.class))).thenReturn(
             replacement);
-        when(teamService.findById(teamId)).thenReturn(team);
-        when(playerService.update(eq(id), any(Player.class))).thenReturn(updated);
+        when(teamServiceImpl.findById(teamId)).thenReturn(team);
+        when(playerServiceImpl.update(eq(id), any(Player.class))).thenReturn(updated);
         when(playerConverter.convert(updated)).thenReturn(new online.rabko.model.Player());
         online.rabko.model.Player dto = new online.rabko.model.Player();
         dto.setTeamId(teamId);
@@ -170,8 +170,8 @@ class PlayersControllerTest {
             .statusCode(200)
             .body("$", notNullValue());
 
-        verify(teamService).findById(eq(teamId));
-        verify(playerService).update(eq(id), any(Player.class));
+        verify(teamServiceImpl).findById(eq(teamId));
+        verify(playerServiceImpl).update(eq(id), any(Player.class));
         verify(playerConverter).convert(updated);
     }
 
@@ -184,7 +184,7 @@ class PlayersControllerTest {
 
         when(playerConverter.convertBack(any(online.rabko.model.Player.class))).thenReturn(
             replacement);
-        when(playerService.update(eq(id), any(Player.class))).thenReturn(updated);
+        when(playerServiceImpl.update(eq(id), any(Player.class))).thenReturn(updated);
         when(playerConverter.convert(updated)).thenReturn(new online.rabko.model.Player());
 
         given()
@@ -196,15 +196,15 @@ class PlayersControllerTest {
             .statusCode(200)
             .body("$", notNullValue());
 
-        verifyNoInteractions(teamService);
-        verify(playerService).update(eq(id), any(Player.class));
+        verifyNoInteractions(teamServiceImpl);
+        verify(playerServiceImpl).update(eq(id), any(Player.class));
         verify(playerConverter).convert(updated);
     }
 
     @Test
     void playersIdDelete_shouldDeletePlayer() {
         Long id = 9L;
-        doNothing().when(playerService).delete(id);
+        doNothing().when(playerServiceImpl).delete(id);
 
         given()
             .when()
@@ -212,14 +212,14 @@ class PlayersControllerTest {
             .then()
             .statusCode(204);
 
-        verify(playerService).delete(id);
-        verifyNoInteractions(playerConverter, teamService);
+        verify(playerServiceImpl).delete(id);
+        verifyNoInteractions(playerConverter, teamServiceImpl);
     }
 
     @Test
     void playersIdGet_shouldReturnNotFound() {
         Long id = 404L;
-        when(playerService.findById(id)).thenThrow(
+        when(playerServiceImpl.findById(id)).thenThrow(
             new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         given()
@@ -232,7 +232,8 @@ class PlayersControllerTest {
     @Test
     void playersIdDelete_shouldReturnNotFound() {
         Long id = 404L;
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(playerService).delete(id);
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(playerServiceImpl)
+            .delete(id);
 
         given()
             .when()

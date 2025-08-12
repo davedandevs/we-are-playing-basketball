@@ -17,7 +17,7 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import java.util.List;
 import online.rabko.basketball.controller.UsersController;
 import online.rabko.basketball.controller.converter.UserConverter;
-import online.rabko.basketball.service.UserService;
+import online.rabko.basketball.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +34,7 @@ import org.springframework.web.server.ResponseStatusException;
 class UsersControllerTest {
 
     @Mock
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @Mock
     private UserConverter converter;
@@ -53,7 +53,7 @@ class UsersControllerTest {
             .id(1L).username("alice").build();
         online.rabko.basketball.entity.User u2 = online.rabko.basketball.entity.User.builder()
             .id(2L).username("bob").build();
-        when(userService.findAll()).thenReturn(List.of(u1, u2));
+        when(userServiceImpl.findAll()).thenReturn(List.of(u1, u2));
         when(converter.convert(u1)).thenReturn(new online.rabko.model.User());
         when(converter.convert(u2)).thenReturn(new online.rabko.model.User());
 
@@ -64,7 +64,7 @@ class UsersControllerTest {
             .statusCode(200)
             .body("$", hasSize(2));
 
-        verify(userService).findAll();
+        verify(userServiceImpl).findAll();
         verify(converter, times(2)).convert(any(online.rabko.basketball.entity.User.class));
     }
 
@@ -73,7 +73,7 @@ class UsersControllerTest {
         Long id = 42L;
         online.rabko.basketball.entity.User entity = online.rabko.basketball.entity.User.builder()
             .id(id).username("john").build();
-        when(userService.findById(id)).thenReturn(entity);
+        when(userServiceImpl.findById(id)).thenReturn(entity);
         when(converter.convert(entity)).thenReturn(new online.rabko.model.User());
 
         given()
@@ -83,7 +83,7 @@ class UsersControllerTest {
             .statusCode(200)
             .body("$", notNullValue());
 
-        verify(userService).findById(id);
+        verify(userServiceImpl).findById(id);
         verify(converter).convert(entity);
     }
 
@@ -99,7 +99,8 @@ class UsersControllerTest {
 
         online.rabko.basketball.entity.User updated = online.rabko.basketball.entity.User.builder()
             .id(id).username("new").build();
-        when(userService.update(eq(id), any(online.rabko.basketball.entity.User.class))).thenReturn(
+        when(userServiceImpl.update(eq(id),
+            any(online.rabko.basketball.entity.User.class))).thenReturn(
             updated);
         when(converter.convert(updated)).thenReturn(new online.rabko.model.User());
 
@@ -113,14 +114,14 @@ class UsersControllerTest {
             .body("$", notNullValue());
 
         verify(converter).convertBack(any(online.rabko.model.User.class));
-        verify(userService).update(eq(id), any(online.rabko.basketball.entity.User.class));
+        verify(userServiceImpl).update(eq(id), any(online.rabko.basketball.entity.User.class));
         verify(converter).convert(updated);
     }
 
     @Test
     void usersIdDelete_shouldDeleteUser() {
         Long id = 9L;
-        doNothing().when(userService).delete(id);
+        doNothing().when(userServiceImpl).delete(id);
 
         given()
             .when()
@@ -128,14 +129,15 @@ class UsersControllerTest {
             .then()
             .statusCode(204);
 
-        verify(userService).delete(id);
+        verify(userServiceImpl).delete(id);
         verifyNoInteractions(converter);
     }
 
     @Test
     void usersIdGet_shouldReturnNotFound() {
         Long id = 404L;
-        when(userService.findById(id)).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+        when(userServiceImpl.findById(id)).thenThrow(
+            new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         given()
             .when()
@@ -147,7 +149,7 @@ class UsersControllerTest {
     @Test
     void usersIdDelete_shouldReturnNotFound() {
         Long id = 404L;
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userService).delete(id);
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(userServiceImpl).delete(id);
 
         given()
             .when()

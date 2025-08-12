@@ -3,8 +3,8 @@ package online.rabko.basketball.controller.converter;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import online.rabko.basketball.entity.Match;
-import online.rabko.basketball.service.SeasonService;
-import online.rabko.basketball.service.TeamService;
+import online.rabko.basketball.service.impl.SeasonServiceImpl;
+import online.rabko.basketball.service.impl.TeamServiceImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MatchConverter extends TwoWayConverter<Match, online.rabko.model.Match> {
 
-    private final SeasonService seasonService;
-    private final TeamService teamService;
+    private final SeasonServiceImpl seasonServiceImpl;
+    private final TeamServiceImpl teamServiceImpl;
 
     /**
      * {@inheritDoc}
@@ -44,13 +44,13 @@ public class MatchConverter extends TwoWayConverter<Match, online.rabko.model.Ma
             .build();
 
         if (Objects.nonNull(dto.getSeasonId())) {
-            match.setSeason(seasonService.findById(dto.getSeasonId()));
+            match.setSeason(seasonServiceImpl.findById(dto.getSeasonId()));
         }
         if (Objects.nonNull(dto.getHomeTeamId())) {
-            match.setHomeTeam(teamService.findById(dto.getHomeTeamId()));
+            match.setHomeTeam(teamServiceImpl.findById(dto.getHomeTeamId()));
         }
         if (Objects.nonNull(dto.getAwayTeamId())) {
-            match.setAwayTeam(teamService.findById(dto.getAwayTeamId()));
+            match.setAwayTeam(teamServiceImpl.findById(dto.getAwayTeamId()));
         }
         return match;
     }

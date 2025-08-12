@@ -15,6 +15,7 @@ import java.util.Optional;
 import online.rabko.basketball.entity.Team;
 import online.rabko.basketball.repository.TeamRepository;
 import online.rabko.basketball.service.TeamService;
+import online.rabko.basketball.service.impl.TeamServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,16 +23,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * Unit tests for {@link TeamService}.
+ * Unit tests for {@link TeamServiceImpl}.
  */
 @ExtendWith(MockitoExtension.class)
-class TeamServiceTest {
+class TeamServiceImplTest {
 
     @Mock
     private TeamRepository teamRepository;
 
     @InjectMocks
-    private TeamService teamService;
+    private TeamServiceImpl teamService;
 
     @Test
     void findAll_shouldReturnList() {
