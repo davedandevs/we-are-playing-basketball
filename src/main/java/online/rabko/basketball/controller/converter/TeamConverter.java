@@ -4,7 +4,7 @@ import online.rabko.basketball.entity.Team;
 import org.springframework.stereotype.Component;
 
 /**
- * Конвертер между сущностью Team и DTO online.rabko.model.Team.
+ * Converts between {@link Team} entity and {@link online.rabko.model.Team} DTO.
  */
 @Component
 public class TeamConverter extends TwoWayConverter<Team, online.rabko.model.Team> {
