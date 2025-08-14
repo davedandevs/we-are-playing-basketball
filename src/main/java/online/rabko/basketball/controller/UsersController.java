@@ -24,6 +24,7 @@ public class UsersController implements UsersApi {
      * {@inheritDoc}
      */
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> usersGet() {
         return ResponseEntity.ok(
             userServiceImpl.findAll().stream()
@@ -35,6 +36,7 @@ public class UsersController implements UsersApi {
     /**
      * {@inheritDoc}
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public ResponseEntity<User> usersIdGet(Long id) {
         return ResponseEntity.ok(converter.convert(userServiceImpl.findById(id)));
