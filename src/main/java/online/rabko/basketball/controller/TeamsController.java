@@ -9,6 +9,7 @@ import online.rabko.basketball.controller.converter.TeamConverter;
 import online.rabko.basketball.entity.Team;
 import online.rabko.basketball.service.impl.TeamServiceImpl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -37,6 +38,7 @@ public class TeamsController implements TeamsApi {
      * {@inheritDoc}
      */
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> teamsIdDelete(Long id) {
         teamServiceImpl.delete(id);
         return ResponseEntity.noContent().build();
@@ -55,6 +57,7 @@ public class TeamsController implements TeamsApi {
      * {@inheritDoc}
      */
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<online.rabko.model.Team> teamsIdPut(Long id,
         online.rabko.model.Team teamDto) {
         Team team = teamConverter.convertBack(teamDto);
@@ -66,6 +69,7 @@ public class TeamsController implements TeamsApi {
      * {@inheritDoc}
      */
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<online.rabko.model.Team> teamsPost(online.rabko.model.Team teamDto) {
         Team team = teamConverter.convertBack(teamDto);
         Team created = teamServiceImpl.create(team);
