@@ -57,6 +57,19 @@ docker compose up -d
 ./gradlew bootRun
 ```
 
+## API Documentation
+
+After starting the application, you can explore and test all available endpoints via Swagger UI:
+
+[http://localhost:9080/swagger-ui/index.html](http://localhost:9080/swagger-ui/index.html)
+
+## Testing
+
+Run tests with:
+```bash
+./gradlew test
+```
+
 ## Contributing
 
 We welcome contributions from the community. Feel free to drop an ISSUE or branch out and drop a PR.
