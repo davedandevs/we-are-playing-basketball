@@ -26,10 +26,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JwtAuthenticationResponse'
-        '400':
-          description: Invalid input data
         '409':
-          description: User already exists
+          description: User with username 'username' already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /auth/token:
     post:
@@ -51,6 +53,10 @@ paths:
                 $ref: '#/components/schemas/JwtAuthenticationResponse'
         '401':
           description: Invalid username or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /users:
     get:

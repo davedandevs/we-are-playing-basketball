@@ -77,11 +77,12 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Handles bean validation errors triggered by {@code @Valid}. Returns 400 Bad Request with the
+     * Handles errors triggered by {@code @Valid}. Returns 400 Bad Request with the
      * first field error message.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Error> handleBeanValidation(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Error> handleMethodArgumentNotValidValidation(
+        MethodArgumentNotValidException ex) {
         String msg = ex.getBindingResult().getFieldErrors().stream()
             .map(err -> err.getField() + ": " + err.getDefaultMessage())
             .findFirst().orElse("Invalid input");
