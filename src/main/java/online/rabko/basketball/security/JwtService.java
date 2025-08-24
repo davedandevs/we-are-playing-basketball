@@ -1,4 +1,4 @@
-package online.rabko.basketball.service;
+package online.rabko.basketball.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

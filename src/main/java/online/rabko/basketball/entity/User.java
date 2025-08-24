@@ -50,6 +50,19 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
+
+    /**
+     * User's first name.
+     */
+    @Column(name = "first_name")
+    private String firstName;
+
+    /**
+     * User's last name.
+     */
+    @Column(name = "last_name")
+    private String lastName;
+
     /**
      * User role defining their access level in the system.
      */

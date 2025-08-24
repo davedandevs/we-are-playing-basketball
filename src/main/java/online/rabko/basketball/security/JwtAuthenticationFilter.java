@@ -1,4 +1,4 @@
-package online.rabko.basketball.config;
+package online.rabko.basketball.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,8 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import online.rabko.basketball.service.JwtService;
-import online.rabko.basketball.service.UserService;
+import online.rabko.basketball.service.impl.UserServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
@@ -37,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtService jwtService;
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     /**
      * Processes the incoming HTTP request, extracts JWT token (if present), validates it, and sets
@@ -67,7 +66,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.isNotEmpty(username) && Objects.isNull(
             SecurityContextHolder.getContext().getAuthentication())) {
 
-            UserDetails userDetails = userService.userDetailsService().loadUserByUsername(username);
+            UserDetails userDetails = userServiceImpl.userDetailsService()
+                .loadUserByUsername(username);
 
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();

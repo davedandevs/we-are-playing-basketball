@@ -1,4 +1,4 @@
-package online.rabko.basketball.unit.service;
+package online.rabko.basketball.unit.security;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,8 +11,8 @@ import static org.mockito.Mockito.when;
 
 import online.rabko.basketball.entity.User;
 import online.rabko.basketball.exception.UserAlreadyExistsException;
-import online.rabko.basketball.service.AuthenticationService;
-import online.rabko.basketball.service.JwtService;
+import online.rabko.basketball.security.AuthenticationService;
+import online.rabko.basketball.security.JwtService;
 import online.rabko.basketball.service.UserService;
 import online.rabko.model.JwtAuthenticationResponse;
 import online.rabko.model.Role;

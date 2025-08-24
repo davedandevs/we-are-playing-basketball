@@ -1,4 +1,4 @@
-package online.rabko.basketball.unit.service;
+package online.rabko.basketball.unit.security;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -16,7 +16,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import online.rabko.basketball.entity.User;
-import online.rabko.basketball.service.JwtService;
+import online.rabko.basketball.security.JwtService;
 import online.rabko.model.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

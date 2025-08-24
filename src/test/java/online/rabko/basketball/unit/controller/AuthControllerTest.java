@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import online.rabko.basketball.controller.AuthController;
-import online.rabko.basketball.service.AuthenticationService;
+import online.rabko.basketball.security.AuthenticationService;
 import online.rabko.model.JwtAuthenticationResponse;
 import online.rabko.model.SignInRequest;
 import online.rabko.model.SignUpRequest;

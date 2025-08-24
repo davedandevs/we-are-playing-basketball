@@ -1,8 +1,9 @@
-package online.rabko.basketball.service;
+package online.rabko.basketball.security;
 
 import lombok.RequiredArgsConstructor;
 import online.rabko.basketball.entity.User;
 import online.rabko.basketball.exception.UserAlreadyExistsException;
+import online.rabko.basketball.service.UserService;
 import online.rabko.model.JwtAuthenticationResponse;
 import online.rabko.model.Role;
 import online.rabko.model.SignInRequest;
